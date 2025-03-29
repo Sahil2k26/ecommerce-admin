@@ -2,7 +2,6 @@
 
 import { auth } from "@clerk/nextjs/server"
 import prismadb from "@/lib/prismadb";
-import { error } from "console";
 
 export  async function CreateStore(name:string):Promise<{error?:string,message?:string,store?:any}> {
     const {userId}=await auth();

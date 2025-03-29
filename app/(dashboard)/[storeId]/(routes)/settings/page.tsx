@@ -10,21 +10,29 @@ export default async function Settings(props:SettingsProps) {
     const {storeId} = await props.params
     const {userId}=await auth();
     if(!userId) redirect("/signin");
-
-    const store=await prismadb.store.findFirst({
-        where:{
-            id:storeId,
-            userId
-        }
-    })
-    if(!store) redirect("/");
-
-
-    return (
-        <div className="flex flex-col">
-            <div className="flex-1 space-y-4 p-8 pt-6">
-                <SettingsForm initialData={store}></SettingsForm>
+    try{
+        const store=await prismadb.store.findFirst({
+            where:{
+                id:storeId,
+                userId
+            }
+        })
+        if(!store) redirect("/");
+    
+    
+        return (
+            <div className="flex flex-col">
+                <div className="flex-1 space-y-4 p-8 pt-6">
+                    <SettingsForm initialData={store}></SettingsForm>
+                </div>
             </div>
-        </div>
-    )
+        )
+
+    }catch(e){
+        console.log(e);
+        alert("Internal Error")
+        return <></>
+        
+    }
+    
 }
