@@ -1,16 +1,13 @@
 "use client"
 
 import { CreateBillboard, DeleteBillboard, UpdateBillboard } from "@/app/actions/billboard"
-import { DeleteStore, UpdateStore } from "@/app/actions/store"
 import AlertModal from "@/components/modals/alert-modal"
-import { ApiAlert } from "@/components/ui/api-alert"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import Heading from "@/components/ui/Heading"
 import ImageUpload from "@/components/ui/image-upload"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { useOrigin } from "@/hooks/use-origin"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Billboard} from "@prisma/client"
 import { Trash } from "lucide-react"
@@ -36,14 +33,12 @@ export default function BillboardForm({storeId,initialData}: BillboardsFormProps
     const [open,setopen]=useState(false);
     const [loading,setLoading]=useState(false);
 
-    const origin=useOrigin();
     const router=useRouter();
     //const params=useParams();
     
 
     const title=initialData?"Edit billboard":"Create billboard";
     const description=initialData?"Manage your store billboard":"Add a new billboard";
-    const toastMessage=initialData?"Billboard updated":"Billboard created";
     const action=initialData?"Save changes":"Create";
 
 
@@ -174,7 +169,6 @@ export default function BillboardForm({storeId,initialData}: BillboardsFormProps
                 </Button>
             </form>
         </Form>
-        <Separator/>
 
 
         </>

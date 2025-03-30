@@ -15,6 +15,9 @@ export async function GetBillboards(storeId:string) {
         const billboards=await prismadb.billboard.findMany({
             where:{
                 storeId:storeId
+            },
+            orderBy:{
+                createdAt:"desc"
             }
         })
         return {message:"Found",billboards};
