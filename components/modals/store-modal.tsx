@@ -4,16 +4,24 @@ import { useStoreModal } from "@/hooks/use-store-modal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {z} from "zod";
+import axios, { AxiosError } from "axios";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import {CreateStore} from "@/app/actions/store";
 import toast from "react-hot-toast";
+import { Store } from "@prisma/client";
+
 
 const formSchema=z.object({
     name:z.string().nonempty("Store name is required"),
 })
+interface resInterface {
+    message?:string,
+    error?:string,
+    store?:Store
+}
 
 
 export default function StoreModal() {
@@ -28,23 +36,26 @@ export default function StoreModal() {
     const onSubmit=async (values:z.infer<typeof formSchema>)=>{
         console.log(values)
         try{
-            setLoading(true);
             const res=await CreateStore(values.name);
+            //const res = await axios.post('/api/stores', { name: values.name });
+            //const res=await axios.post()
             console.log(res);
-            if(res.error){
+            if(res?.error){
                 throw new Error(res.error)
             }
             // toast.success(res.message||"");
             // form.reset();
             // storeModal.onClose();
 
-            window.location.assign(`/${res.store.id}`)
+            window.location.assign(`/${(res as resInterface).store?.id}`)
 
 
             
         }
         catch(error:any){
-            toast.error("Something went wrong");
+            if(error instanceof AxiosError)
+                toast.error(error.response?.data?.error);
+            else toast.error(error.message || "Something went wrong" )
             console.log(error);
         }
         finally{

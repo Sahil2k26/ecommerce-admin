@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { useOrigin } from "@/hooks/use-origin"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Store } from "@prisma/client"
+import axios, { AxiosError } from "axios"
 import { Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -46,6 +47,14 @@ export default function SettingsForm({initialData}: SettingsFormProps) {
             setLoading(true)
             
             const res=await UpdateStore(initialData.id,data)
+            //const res=await axios.patch(`/api/stores/${initialData.id}`,data);
+            // if(res.data.error){
+            //     throw new Error(res.data.error);
+            // }
+            // router.refresh();
+            // toast.success(res.data.message || "Done Successfully");
+
+
             if(res.error){
                 throw new Error(res.error);
             }
@@ -54,8 +63,11 @@ export default function SettingsForm({initialData}: SettingsFormProps) {
             
             
 
-        }catch(e){
-            toast.error("Something went wrong,")
+        }catch(e:any){
+            if(e instanceof AxiosError){
+                toast.error(e.response?.data.error || e.message);
+            }
+            else toast.error( e.message || "Something went wrong,")
         }
         finally{
             setLoading(false)
@@ -126,7 +138,7 @@ export default function SettingsForm({initialData}: SettingsFormProps) {
         </Form>
         <Separator/>
         <ApiAlert title="NEXT_PUBLIC_API_URL" 
-        description={`${origin}/api/${initialData.id}`} 
+        description={`${origin}/api/stores/${initialData.id}`} 
         variant="public" />
 
 

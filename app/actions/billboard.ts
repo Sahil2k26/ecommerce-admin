@@ -30,7 +30,7 @@ export async function GetBillboards(storeId:string) {
 export  async function CreateBillboard(storeId:string,{label,imageUrl}:{label:string,imageUrl:string}):Promise<{error?:string,message?:string,billboard?:Billboard}> {
     const {userId}=await auth();
     if(!userId){
-       return {error:"You must be logged in to create a store"}
+       return {error:"You must be logged in to create a billboard"}
     }
     if(!label || label.trim()===""){
         return {error:"Billboard name is required"};
