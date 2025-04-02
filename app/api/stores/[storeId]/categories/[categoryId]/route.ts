@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET(req: NextRequest,
-    { params }: { params: Promise<{ storeId: string ,billboardId:string}> }
+    { params }: { params: Promise<{ storeId: string ,categoryId:string}> }
 ) {
-    const { storeId ,billboardId } = await params
+    const { storeId ,categoryId } = await params
     const store = await prismadb.store.findFirst({
         where: {
             id: storeId
@@ -14,33 +14,33 @@ export async function GET(req: NextRequest,
     })
     if (!store) return NextResponse.json({ error: "No store exists" }, { status: 404 });
     try {
-        const billboards = await prismadb.billboard.findFirst({
+        const category = await prismadb.category.findFirst({
             where: {
                 storeId: storeId,
-                id:billboardId
+                id:categoryId
             }
         })
-        return NextResponse.json({ message: "Found", billboards });
+        return NextResponse.json({ message: "Found", category });
 
     } catch (e) {
-        return NextResponse.json({ error: "Failed to get billboard" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to get category" }, { status: 500 });
     }
 
 }
 
 
 export async function PATCH(req:NextRequest,
-    {params}:{params:Promise<{storeId:string,billboardId:string}>}
+    {params}:{params:Promise<{storeId:string,categoryId:string}>}
 ) {
     
     const { userId } = await auth();
     if (!userId) {
         return NextResponse.json({ error: "You must be logged in to create a billboard" },{status:401});
     }
-    const {storeId,billboardId}=await params;
-    const {label,imageUrl}=await req.json();
-    if (!label || label.trim() === "") {
-        return NextResponse.json({ error: "Billboard name is required" },{status:400});
+    const {storeId,categoryId}=await params;
+    const {name,billboardId}=await req.json();
+    if (!name || name.trim() === "") {
+        return NextResponse.json({ error: "Category name is required" },{status:400});
     }
     const store = await prismadb.store.findFirst({
         where: {
@@ -51,37 +51,38 @@ export async function PATCH(req:NextRequest,
     if (!store) return  NextResponse.json({ error: "No store exists" },{status:404});
     // Create a billboard
     try {
-        const res=await prismadb.billboard.update(({
+        const res=await prismadb.category.update(({
             data:{
-                label,
-                imageUrl
+                name,
+                billboardId
+                
             },
             where:{
-                id:billboardId,
+                id:categoryId,
                 storeId
                 
             }
         }))
-        return NextResponse.json({message:"updated successfully!" ,billboard:res});
+        return NextResponse.json({message:"updated successfully!" ,category:res});
 
         
 
     }
     catch (error) {
-        return NextResponse.json({ error: "Failed to update billboard" },{status:500});
+        return NextResponse.json({ error: "Failed to update category" },{status:500});
     }
     
 }
 
 export async function DELTE(req:NextRequest,
-    {params}:{params:Promise<{storeId:string,billboardId:string}>}
+    {params}:{params:Promise<{storeId:string,categoryId:string}>}
 ) {
     
     const { userId } = await auth();
     if (!userId) {
         return NextResponse.json({ error: "You must be logged in to create a billboard" },{status:401});
     }
-    const {storeId,billboardId}=await params;
+    const {storeId,categoryId}=await params;
 
     const store = await prismadb.store.findFirst({
         where: {
@@ -92,21 +93,21 @@ export async function DELTE(req:NextRequest,
     if (!store) return  NextResponse.json({ error: "No store exists" },{status:404});
     // Create a billboard
     try {
-        const res=await prismadb.billboard.delete(({
+        const res=await prismadb.category.delete(({
         
             where:{
-                id:billboardId,
+                id:categoryId,
                 storeId
                 
             }
         }))
-        return NextResponse.json({message:"Deleted successfully!" ,billboard:res});
+        return NextResponse.json({message:"Deleted successfully!" ,category:res});
 
         
 
     }
     catch (error) {
-        return NextResponse.json({ error: "Failed to delete billboard" },{status:500});
+        return NextResponse.json({ error: "Failed to delete category" },{status:500});
     }
     
 }

@@ -86,8 +86,8 @@ export default function SettingsForm({initialData}: SettingsFormProps) {
 
 
 
-        }catch(e){
-            toast.error("Make sure you have removed all the products and categories first");
+        }catch(e:any){
+            toast.error(e.message  || "Make sure you have removed all the products and categories first");
         }finally{
             setLoading(false)
         }

@@ -5,15 +5,15 @@ import Heading from "@/components/ui/Heading"
 import { Separator } from "@/components/ui/separator"
 import { Plus } from "lucide-react"
 import { useParams, useRouter } from "next/navigation";
-import { BillboardColumns, columns } from "./columns"
+import { CategoriesColumns, columns } from "./columns"
 import { DataTable } from "@/components/ui/data-table"
 import { ApiList } from "@/components/ui/api-list"
 
-interface BillboardClientProps {
-    data:BillboardColumns[]
+interface CategoryClientProps {
+    data:CategoriesColumns[]
 }
 
-export const BillboardClient:React.FC<BillboardClientProps> = ({data})=>{
+export const CategoryClient:React.FC<CategoryClientProps> = ({data})=>{
     const router=useRouter();
     const params=useParams();
     const n=data.length
@@ -21,26 +21,26 @@ export const BillboardClient:React.FC<BillboardClientProps> = ({data})=>{
         <>
         <div className="flex items-center justify-between">
             <Heading 
-                title={`Billboards(${n})`}
-                description="Manage billboards for your store"
+                title={`Categories(${n})`}
+                description="Manage Categories for your store"
 
             >
             </Heading>
             
-            <Button onClick={()=>router.push(`/${params.storeId}/billboards/new`)}>
+            <Button onClick={()=>router.push(`/${params.storeId}/categories/new`)}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add New
             </Button>
         </div>
         <Separator></Separator>
-        <DataTable searchKey="label" columns={columns}  data={data}/>
+        <DataTable searchKey="name" columns={columns}  data={data}/>
         <Heading 
             title="API"
-            description="API calls for Billboards"
+            description="API calls for Categories"
         >
         </Heading>
         <Separator/>
-        <ApiList entityName="billboards" entityIdName="billboardId"/>
+        <ApiList entityName="categories" entityIdName="categoryId"/>
         </>
     )
 }
