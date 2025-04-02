@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET(req: NextRequest,
-    { params }: { params: Promise<{ storeId: string ,categoryId:string}> }
+    { params }: { params: Promise<{ storeId: string ,sizeId:string}> }
 ) {
-    const { storeId ,categoryId } = await params
+    const { storeId ,sizeId } = await params
     const store = await prismadb.store.findFirst({
         where: {
             id: storeId
@@ -14,33 +14,36 @@ export async function GET(req: NextRequest,
     })
     if (!store) return NextResponse.json({ error: "No store exists" }, { status: 404 });
     try {
-        const category = await prismadb.category.findFirst({
+        const size = await prismadb.size.findFirst({
             where: {
                 storeId: storeId,
-                id:categoryId
+                id:sizeId
             }
         })
-        return NextResponse.json({ message: "Found", category });
+        return NextResponse.json({ message: "Found", size });
 
     } catch (e) {
-        return NextResponse.json({ error: "Failed to get category" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to get size" }, { status: 500 });
     }
 
 }
 
 
 export async function PATCH(req:NextRequest,
-    {params}:{params:Promise<{storeId:string,categoryId:string}>}
+    {params}:{params:Promise<{storeId:string,sizeId:string}>}
 ) {
     
     const { userId } = await auth();
     if (!userId) {
-        return NextResponse.json({ error: "You must be logged in to update a category" },{status:401});
+        return NextResponse.json({ error: "You must be logged in to update a size" },{status:401});
     }
-    const {storeId,categoryId}=await params;
-    const {name,billboardId}=await req.json();
+    const {storeId,sizeId}=await params;
+    const {name,value}=await req.json();
     if (!name || name.trim() === "") {
-        return NextResponse.json({ error: "Category name is required" },{status:400});
+        return NextResponse.json({ error: "size name is required" },{status:400});
+    }
+    if (!value || value.trim() === "") {
+        return NextResponse.json({ error: "size value is required" },{status:400});
     }
     const store = await prismadb.store.findFirst({
         where: {
@@ -51,38 +54,38 @@ export async function PATCH(req:NextRequest,
     if (!store) return  NextResponse.json({ error: "No store exists" },{status:404});
     // Create a billboard
     try {
-        const res=await prismadb.category.update(({
+        const res=await prismadb.size.update(({
             data:{
                 name,
-                billboardId
+                value
                 
             },
             where:{
-                id:categoryId,
+                id:sizeId,
                 storeId
                 
             }
         }))
-        return NextResponse.json({message:"updated successfully!" ,category:res});
+        return NextResponse.json({message:"updated successfully!" ,size:res});
 
         
 
     }
     catch (error) {
-        return NextResponse.json({ error: "Failed to update category" },{status:500});
+        return NextResponse.json({ error: "Failed to update size" },{status:500});
     }
     
 }
 
 export async function DELTE(req:NextRequest,
-    {params}:{params:Promise<{storeId:string,categoryId:string}>}
+    {params}:{params:Promise<{storeId:string,sizeId:string}>}
 ) {
     
     const { userId } = await auth();
     if (!userId) {
-        return NextResponse.json({ error: "You must be logged in to delete a category" },{status:401});
+        return NextResponse.json({ error: "You must be logged in to delete the size" },{status:401});
     }
-    const {storeId,categoryId}=await params;
+    const {storeId,sizeId}=await params;
 
     const store = await prismadb.store.findFirst({
         where: {
@@ -93,21 +96,21 @@ export async function DELTE(req:NextRequest,
     if (!store) return  NextResponse.json({ error: "No store exists" },{status:404});
     // Create a billboard
     try {
-        const res=await prismadb.category.delete(({
+        const res=await prismadb.size.delete(({
         
             where:{
-                id:categoryId,
+                id:sizeId,
                 storeId
                 
             }
         }))
-        return NextResponse.json({message:"Deleted successfully!" ,category:res});
+        return NextResponse.json({message:"Deleted successfully!" ,size:res});
 
         
 
     }
     catch (error) {
-        return NextResponse.json({ error: "Failed to delete category" },{status:500});
+        return NextResponse.json({ error: "Failed to delete size" },{status:500});
     }
     
 }
