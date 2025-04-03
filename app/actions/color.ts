@@ -2,9 +2,9 @@
 
 import { auth } from "@clerk/nextjs/server"
 import prismadb from "@/lib/prismadb";
-import { Size } from "@prisma/client";
+import { Color } from "@prisma/client";
 
-export async function Getsizes(storeId:string) {
+export async function Getcolors(storeId:string) {
     const store=await prismadb.store.findFirst({
         where:{
             id:storeId
@@ -12,7 +12,7 @@ export async function Getsizes(storeId:string) {
     })
     if(!store) return {error:"No store exists"}
     try{
-        const sizes=await prismadb.size.findMany({
+        const colors=await prismadb.color.findMany({
             where:{
                 storeId:storeId
             },
@@ -20,23 +20,23 @@ export async function Getsizes(storeId:string) {
                 createdAt:"desc"
             }
         })
-        return {message:"Found",sizes};
+        return {message:"Found",colors};
 
     }catch(e){
-        return {error:"Failed to get sizes"}
+        return {error:"Failed to get colors"}
     }
     
 }
-export  async function CreateSize(storeId:string,{name,value}:{name:string,value:string}):Promise<{error?:string,message?:string,Size?:Size}> {
+export  async function Createcolor(storeId:string,{name,value}:{name:string,value:string}):Promise<{error?:string,message?:string,color?:Color}> {
     const {userId}=await auth();
     if(!userId){
-       return {error:"You must be logged in to create a size"}
+       return {error:"You must be logged in to create a color"}
     }
     if(!name || name.trim()===""){
-        return {error:"Size name is required"};
+        return {error:"color name is required"};
     }
     if(!value || value.trim()==""){
-        return {error:"Size value is required"};
+        return {error:"color value is required"};
     }
     const store=await prismadb.store.findFirst({
         where:{
@@ -45,9 +45,9 @@ export  async function CreateSize(storeId:string,{name,value}:{name:string,value
         }
     })
     if(!store) return {error:"No store exists"}
-    // Create a Size
+    // Create a color
     try{
-        const Size=await prismadb.size.create({
+        const color=await prismadb.color.create({
             data:{
                 name,
                 value,
@@ -56,13 +56,13 @@ export  async function CreateSize(storeId:string,{name,value}:{name:string,value
         })
 
         return {
-            message:"Size created successfully",
-            Size
+            message:"Color created successfully",
+            color
         }
 
     }
     catch(error){
-        return {error:"Failed to create the size"}
+        return {error:"Failed to create the color"}
     }
     
 
@@ -70,16 +70,16 @@ export  async function CreateSize(storeId:string,{name,value}:{name:string,value
     
 }
 
-export async function UpdateSize(storeId:string,SizeId:string,{name,value}:{name:string,value:string} ){
+export async function Updatecolor(storeId:string,colorId:string,{name,value}:{name:string,value:string} ){
     const {userId}=await auth();
     if(!userId){
-       return {error:"You must be logged in to update a Size"}
+       return {error:"You must be logged in to update a color"}
     }
     if(!name || name.trim()===""){
-        return {error:"Size name is required"};
+        return {error:"color name is required"};
     }
     if(!value || value.trim()==""){
-        return {error:"Size value is required"};
+        return {error:"color value is required"};
     }
     const store=await prismadb.store.findFirst({
         where:{
@@ -91,18 +91,18 @@ export async function UpdateSize(storeId:string,SizeId:string,{name,value}:{name
    
     //if(!store) return {error:"Store doesn't exits"};
     try{
-        const res=await prismadb.size.update(({
+        const res=await prismadb.color.update(({
             data:{
                 name,
                 value
             },
             where:{
-                id:SizeId,
+                id:colorId,
                 storeId
                 
             }
         }))
-        return {message:"updated successfully!" ,Size:res}
+        return {message:"updated successfully!" ,color:res}
 
     }catch(e){
         return {error:"Something went wrong",errorObj:e}
@@ -110,21 +110,21 @@ export async function UpdateSize(storeId:string,SizeId:string,{name,value}:{name
 
 }
 
-export async function DeleteSize(SizeId:string){
+export async function Deletecolor(colorId:string){
     const {userId}=await auth();
     if(!userId){
-       return {error:"You must be logged in to delete a size"}
+       return {error:"You must be logged in to delete a color"}
     }
    
     //if(!store) return {error:"Store doesn't exits"};
     try{
-        const res=await prismadb.size.delete(({
+        const res=await prismadb.color.delete(({
             where:{
-                id:SizeId
+                id:colorId
                 
             }
         }))
-        return {message:"Deleted successfully!" ,Size:res}
+        return {message:"Deleted successfully!" ,color:res}
 
     }catch(e){
         return {error:"Something went wrong",errorObj:e}
