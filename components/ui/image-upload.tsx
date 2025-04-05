@@ -33,9 +33,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
     return (
         <div className="flex-col">
-            <div className="mb-4 flex items-center gap-4">
-                {value.map((url) => (
-                    <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden">
+            <div className="mb-4 flex items-center gap-4 flex-wrap">
+                {value.map((url,i) => (
+                    <div key={i} className="relative w-[200px] h-[200px] rounded-md overflow-hidden">
                         <div className="z-10 absolute top-2 right-2">
                             <Button
                                 variant={"destructive"}
@@ -47,6 +47,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
                         </div>
                         <Image
+                            sizes="100%"
                             fill
                             className="object-cover"
                             alt="Image"
@@ -62,11 +63,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     onSuccess={onUpload}
                     uploadPreset="newPreset"
                     options={{
-                        maxFiles: 1,
-                        multiple: false,
-                        sources: ['local'],
+
+                        multiple: true,
+                        sources: ['local',"url","camera","image_search"],
                         resourceType: "image",
-                        clientAllowedFormats: ['jpg', 'png', 'jpeg', 'webp', 'gif']
+                        clientAllowedFormats: ['jpg', 'png', 'jpeg', 'webp', 'gif'],
+                        maxFiles: 5 // Optional: limit number of files
                     }}
                 >
                     {({ open }) => {
@@ -78,7 +80,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                                 onClick={() => open()}
                             >
                                 <ImagePlus className="h-4 w-4" />
-                                Upload an Image
+                                Upload Image(s)
                             </Button>
                         )
                     }}

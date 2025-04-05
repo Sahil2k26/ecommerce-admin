@@ -35,7 +35,7 @@ export async function PATCH(req:NextRequest,
     
     const { userId } = await auth();
     if (!userId) {
-        return NextResponse.json({ error: "You must be logged in to create a billboard" },{status:401});
+        return NextResponse.json({ error: "You must be logged in to update a billboard" },{status:401});
     }
     const {storeId,billboardId}=await params;
     const {label,imageUrl}=await req.json();
@@ -73,13 +73,13 @@ export async function PATCH(req:NextRequest,
     
 }
 
-export async function DELTE(req:NextRequest,
+export async function DELETE(req:NextRequest,
     {params}:{params:Promise<{storeId:string,billboardId:string}>}
 ) {
     
     const { userId } = await auth();
     if (!userId) {
-        return NextResponse.json({ error: "You must be logged in to create a billboard" },{status:401});
+        return NextResponse.json({ error: "You must be logged in to delete a billboard" },{status:401});
     }
     const {storeId,billboardId}=await params;
 

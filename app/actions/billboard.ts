@@ -70,7 +70,7 @@ export  async function CreateBillboard(storeId:string,{label,imageUrl}:{label:st
 export async function UpdateBillboard(storeId:string,billboardId:string,{label,imageUrl}:{label:string,imageUrl:string} ){
     const {userId}=await auth();
     if(!userId){
-       return {error:"You must be logged in to create a store"}
+       return {error:"You must be logged in to update the billboard"}
     }
     if(!label || label.trim()===""){
         return {error:"Billboard name is required"};
@@ -107,7 +107,7 @@ export async function UpdateBillboard(storeId:string,billboardId:string,{label,i
 export async function DeleteBillboard(billboardId:string){
     const {userId}=await auth();
     if(!userId){
-       return {error:"You must be logged in to create a store"}
+       return {error:"You must be logged in to delete the billboard"}
     }
    
     //if(!store) return {error:"Store doesn't exits"};

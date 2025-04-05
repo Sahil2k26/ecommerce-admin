@@ -74,7 +74,7 @@ export async function PATCH(req:NextRequest,
     
 }
 
-export async function DELTE(req:NextRequest,
+export async function DELETE(req:NextRequest,
     {params}:{params:Promise<{storeId:string,categoryId:string}>}
 ) {
     

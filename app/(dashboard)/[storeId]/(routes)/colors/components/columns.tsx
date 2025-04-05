@@ -21,7 +21,7 @@ export const columns: ColumnDef<colorColumns>[] = [
     accessorKey:"value",
     header:"Value",
     cell:({row})=>{
-      console.log("row data" ,row.original);
+      // console.log("row data" ,row.original);
       
       return <div className="flex items-center gap-x-2">
                   <Square fill={row.original.value} ></Square>
