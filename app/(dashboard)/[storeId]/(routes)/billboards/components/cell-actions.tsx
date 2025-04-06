@@ -30,12 +30,15 @@ export const CellAction:React.FC<CellActionProps> = ({data})=>{
                 setLoading(true);
                 const res=await DeleteBillboard(data.id) 
                 setopen(false)
+                if(!res.error){
+                    throw new Error(res.error)
+                }
                 router.refresh();
                 toast.success(res.message || "Deleted successfully")
     
             }catch(e:any){
-                
-                toast.error( e.message || "Make sure you have removed all categories using this billboard");
+                toast.error( e.message=="Something went wrong"?"Make sure you have removed all categories using this billboard":e.message);
+                //toast.error( e.message || "Make sure you have removed all categories using this billboard");
             }finally{
                 setLoading(false)
                 

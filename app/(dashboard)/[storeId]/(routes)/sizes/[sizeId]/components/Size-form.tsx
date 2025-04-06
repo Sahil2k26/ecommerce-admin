@@ -85,6 +85,9 @@ export default function SizeForm({storeId,initialData}: SizesFormProps) {
             if(!initialData) return;
             setLoading(true);
             const res=await DeleteSize(initialData.id) 
+            if(res.error){
+                throw new Error(res.error);
+            }
             router.refresh();
             toast.success(res.message || "Deleted successfully")
             router.push(`/${storeId}/sizes`)// to validate if there are other store and what store to show
@@ -95,8 +98,8 @@ export default function SizeForm({storeId,initialData}: SizesFormProps) {
 
         }catch(e:any){
             console.log(e);
-            
-            toast.error( e.message || "Something went wrong")
+            toast.error( e.message=="Something went wrong"?"Make sure you have removed all the products using this size":e.message);
+            //toast.error( e.message || "Something went wrong")
         }finally{
             setLoading(false)
         }

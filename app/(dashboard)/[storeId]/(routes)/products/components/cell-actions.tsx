@@ -30,12 +30,16 @@ export const CellAction:React.FC<CellActionProps> = ({data})=>{
                 setLoading(true);
                 const res=await DeleteProduct(data.id) 
                 setopen(false)
+                if(res.error) {
+                    throw new Error(res.error)
+                }
+                
                 router.refresh();
                 toast.success(res.message || "Deleted successfully")
     
             }catch(e:any){
                 
-                toast.error( e.message || "Make sure you have removed all categories using this product");
+                toast.error( e.message || "Internal server error");
             }finally{
                 setLoading(false)
                 

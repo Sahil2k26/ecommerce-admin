@@ -30,12 +30,15 @@ export const CellAction:React.FC<CellActionProps> = ({data})=>{
                 setLoading(true);
                 const res=await DeleteSize(data.id) 
                 setopen(false)
+                if(res.error){
+                    throw new Error(res.error)
+                }
                 router.refresh();
                 toast.success(res.message || "Deleted successfully")
     
             }catch(e:any){
-                
-                toast.error( e.message || "something went wrong");
+                toast.error( e.message=="Something went wrong"?"Make sure you have removed all the products using this size":e.message);
+                //toast.error( e.message || "something went wrong");
             }finally{
                 setLoading(false)
                 

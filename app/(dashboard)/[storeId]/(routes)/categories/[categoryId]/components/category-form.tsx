@@ -86,17 +86,18 @@ export default function CategoryForm({storeId,initialData,billboards}: Categorie
             if(!initialData) return;
             setLoading(true);
             const res=await DeleteCategory(initialData.id) 
+            if(res.error){
+                throw new Error(res.error)
+            }
             router.refresh();
+            console.log(res);
             toast.success(res.message || "Deleted successfully")
             router.push(`/${storeId}/categories`)// to validate if there are other store and what store to show
-            //toast.success(res.message ||"Done successfully");
-
-
 
 
         }catch(e:any){
             
-            toast.error( e.message || "Make sure you have removed all categories using this Category");
+            toast.error( e.message=="Something went wrong"?"Make sure you have removed all the products using this category":e.message);
         }finally{
             setLoading(false)
         }

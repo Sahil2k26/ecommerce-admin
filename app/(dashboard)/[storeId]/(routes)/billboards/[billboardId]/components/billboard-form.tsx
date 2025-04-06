@@ -85,6 +85,9 @@ export default function BillboardForm({storeId,initialData}: BillboardsFormProps
             if(!initialData) return;
             setLoading(true);
             const res=await DeleteBillboard(initialData.id) 
+            if(res.error){
+                throw new Error(res.error);
+            }
             router.refresh();
             toast.success(res.message || "Deleted successfully")
             router.push(`/${storeId}/billboards`)// to validate if there are other store and what store to show
@@ -94,8 +97,8 @@ export default function BillboardForm({storeId,initialData}: BillboardsFormProps
 
 
         }catch(e:any){
-            
-            toast.error( e.message || "Make sure you have removed all categories using this billboard");
+            toast.error( e.message=="Something went wrong"?"Make sure you have removed all categories using this billboard":e.message);
+            //toast.error( e.message || "Make sure you have removed all categories using this billboard");
         }finally{
             setLoading(false)
         }

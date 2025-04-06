@@ -80,6 +80,9 @@ export default function SettingsForm({initialData}: SettingsFormProps) {
         try{
             setLoading(true);
             const res=await DeleteStore(initialData.id);
+            if(res.error){
+                throw new Error(res.error);
+            }
             router.refresh();
             router.push("/") // to validate if there are other store and what store to show
             toast.success(res.message ||"Done successfully");

@@ -142,6 +142,10 @@ export default function ProductForm({storeId,initialData,categories,colors,sizes
             if(!initialData) return;
             setLoading(true);
             const res=await DeleteProduct(initialData.id) 
+            if(res.error){
+                throw new Error(res.error);
+            }
+
             router.refresh();
             toast.success(res.message || "Deleted successfully")
             router.push(`/${storeId}/products`)// to validate if there are other store and what store to show
