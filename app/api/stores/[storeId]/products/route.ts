@@ -13,7 +13,7 @@ export async function GET(req: NextRequest,
     })
     if (!store) return NextResponse.json({ error: "No store exists" }, { status: 404 });
     try {
-        const Products = await prismadb.product.findMany({
+        const products = await prismadb.product.findMany({
             where: {
                 storeId: storeId,
                 isArchived: false
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest,
                 createdAt: "desc"
             }
         })
-        return NextResponse.json({ message: "Found", Products });
+        return NextResponse.json({ message: "Found", products });
 
     } catch (e) {
         return NextResponse.json({ error: "Failed to get Products" }, { status: 500 });
@@ -83,7 +83,7 @@ if(!color) return NextResponse.json({error:"No color exists"},{status:404})
     
     // Create a Product
     try{
-        const Product=await prismadb.product.create({
+        const product=await prismadb.product.create({
             data:{
                 name,
                 categoryId,
@@ -106,7 +106,7 @@ if(!color) return NextResponse.json({error:"No color exists"},{status:404})
 
         return NextResponse.json({
             message:"Product created successfully",
-            Product
+            product
         })
 
     }

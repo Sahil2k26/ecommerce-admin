@@ -13,7 +13,7 @@ export async function GET(req: NextRequest,
     })
     if (!store) return NextResponse.json({ error: "No store exists" }, { status: 404 });
     try {
-        const Sizes = await prismadb.size.findMany({
+        const sizes = await prismadb.size.findMany({
             where: {
                 storeId: storeId
             },
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest,
                 createdAt: "desc"
             }
         })
-        return NextResponse.json({ message: "Found", Sizes });
+        return NextResponse.json({ message: "Found", sizes });
 
     } catch (e) {
         return NextResponse.json({ error: "Failed to get sizes" }, { status: 500 });

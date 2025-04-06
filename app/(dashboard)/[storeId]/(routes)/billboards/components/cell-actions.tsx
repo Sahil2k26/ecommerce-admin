@@ -30,7 +30,7 @@ export const CellAction:React.FC<CellActionProps> = ({data})=>{
                 setLoading(true);
                 const res=await DeleteBillboard(data.id) 
                 setopen(false)
-                if(!res.error){
+                if(res.error){
                     throw new Error(res.error)
                 }
                 router.refresh();

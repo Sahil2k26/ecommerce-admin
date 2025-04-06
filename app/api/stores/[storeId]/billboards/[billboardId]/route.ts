@@ -14,13 +14,13 @@ export async function GET(req: NextRequest,
     })
     if (!store) return NextResponse.json({ error: "No store exists" }, { status: 404 });
     try {
-        const billboards = await prismadb.billboard.findFirst({
+        const billboard = await prismadb.billboard.findFirst({
             where: {
                 storeId: storeId,
                 id:billboardId
             }
         })
-        return NextResponse.json({ message: "Found", billboards });
+        return NextResponse.json({ message: "Found", billboard });
 
     } catch (e) {
         return NextResponse.json({ error: "Failed to get billboard" }, { status: 500 });

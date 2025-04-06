@@ -14,7 +14,7 @@ export async function GET(req: NextRequest,
     })
     if (!store) return NextResponse.json({ error: "No store exists" }, { status: 404 });
     try {
-        const Product = await prismadb.product.findFirst({
+        const product = await prismadb.product.findFirst({
             where: {
                 storeId: storeId,
                 id:productId
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest,
                 color:true
             }
         })
-        return NextResponse.json({ message: "Found", Product });
+        return NextResponse.json({ message: "Found", product });
 
     } catch (e) {
         return NextResponse.json({ error: "Failed to get Product" }, { status: 500 });
@@ -116,7 +116,7 @@ export async function PATCH(req:NextRequest,
             }
         })
            
-        return {message:"updated successfully!" ,Product:res}
+        return {message:"updated successfully!" ,product:res}
 
     }catch(e){
         return {error:"Something went wrong",errorObj:e}
@@ -151,7 +151,7 @@ export async function DELETE(req:NextRequest,
                 
             }
         }))
-        return NextResponse.json({message:"Deleted successfully!" ,Product:res});
+        return NextResponse.json({message:"Deleted successfully!" ,product:res});
 
         
 
