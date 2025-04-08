@@ -12,11 +12,22 @@ export async function GET(req: NextRequest,
         }
     })
     if (!store) return NextResponse.json({ error: "No store exists" }, { status: 404 });
+    const {searchParams} = new URL(req.url);
+    const isFeatured=searchParams.get("isFeatured")
+    const sizeId=searchParams.get("sizeId") || undefined
+    const colorId=searchParams.get("colorId") || undefined
+    const categoryId=searchParams.get("categoryId") || undefined
+    
     try {
         const products = await prismadb.product.findMany({
             where: {
                 storeId: storeId,
-                isArchived: false
+                isArchived: false,
+                categoryId,
+                sizeId,
+                colorId,
+                isFeatured:isFeatured?true:undefined
+                
             },
             include: {
                 images: true,
