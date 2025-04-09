@@ -18,6 +18,9 @@ export async function GET(req: NextRequest,
             where: {
                 storeId: storeId,
                 id:categoryId
+            },
+            include:{
+                Billboard:true
             }
         })
         return NextResponse.json({ message: "Found", category });
