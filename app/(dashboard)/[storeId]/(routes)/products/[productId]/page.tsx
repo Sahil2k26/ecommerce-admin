@@ -30,7 +30,7 @@ export default async function productPage({
     })
     const formattedProduct=product? {
         ...product,
-        price:product.price.toNumber(),
+        price:product.price.toString(),
 
     }:null
         

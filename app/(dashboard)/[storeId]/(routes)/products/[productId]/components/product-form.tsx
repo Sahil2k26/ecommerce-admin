@@ -33,7 +33,7 @@ interface productsFormProps {
         sizeId:string
         storeId:string
         images:Image[]
-        price:number
+        price:string
     } & {
         images:Image[]
         
@@ -75,7 +75,7 @@ export default function ProductForm({storeId,initialData,categories,colors,sizes
         resolver:zodResolver(formSchema),
         defaultValues:initialData ? {
             ...initialData,
-            price:parseFloat(String(initialData?.price)),
+            price:parseFloat(initialData?.price),
             // in sql it is decimal but in js it is float
         }
         : {

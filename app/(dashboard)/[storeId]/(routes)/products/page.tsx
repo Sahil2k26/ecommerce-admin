@@ -28,7 +28,7 @@ export default async function productsPage({params}:{
             id:b.id,
             isFeatured:b.isFeatured,
             isArchived:b.isArchived,
-            price:formatter.format(b.price.toNumber()),
+            price:formatter.format(b.price),
             category:b.category.name,
             size:b.size.name,
             color:b.color.value,
