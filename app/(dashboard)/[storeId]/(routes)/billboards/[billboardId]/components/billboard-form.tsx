@@ -3,7 +3,8 @@
 import { CreateBillboard, DeleteBillboard, UpdateBillboard } from "@/app/actions/billboard"
 import AlertModal from "@/components/modals/alert-modal"
 import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import Heading from "@/components/ui/Heading"
 import ImageUpload from "@/components/ui/image-upload"
 import { Input } from "@/components/ui/input"
@@ -23,7 +24,9 @@ interface BillboardsFormProps {
 }
 const formSchema=z.object({
     label:z.string().min(1),
-    imageUrl:z.string().min(1)
+    images:z.object({url:z.string()}).array(),
+    toShowLabel:z.boolean().default(true)
+
 })
 export type BillboardsFormValues=z.infer<typeof formSchema>;
 
@@ -46,9 +49,26 @@ export default function BillboardForm({storeId,initialData}: BillboardsFormProps
         resolver:zodResolver(formSchema),
         defaultValues:initialData || {
             label:"",
-            imageUrl:""
+            images:[],
+            toShowLabel:true
         }
     });
+
+    const handleImageChange = (newUrl: string) => {
+        const currentImages = form.getValues("images");
+        form.setValue("images", [...currentImages, { url: newUrl }], {
+          shouldValidate: true,
+        });
+      };
+    
+      const handleImageRemove = (urlToRemove: string) => {
+        const currentImages = form.getValues("images");
+        form.setValue(
+          "images",
+          currentImages.filter((img) => img.url !== urlToRemove),
+          { shouldValidate: true }
+        );
+      };
     
 
 
@@ -132,23 +152,23 @@ export default function BillboardForm({storeId,initialData}: BillboardsFormProps
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8  w-full">
                 <FormField
                     control={form.control}
-                    name="imageUrl"
+                    name="images"
                     render={({field})=>(
                         <FormItem>
-                            <FormLabel>Billboard Image</FormLabel>
+                            <FormLabel>Billboard Images</FormLabel>
                             <FormControl>
                                 <ImageUpload
-                                    value={field.value?[field.value]:[]}
+                                    value={field.value.map((image)=>image.url)} // Map to URLs
                                     disabled={loading}
-                                    onChange={(url)=>field.onChange(url)}
-                                    onRemove={()=>field.onChange("")}
+                                    onChange={handleImageChange}
+                                    onRemove={handleImageRemove}
                                 />
                             </FormControl>
                             <FormMessage></FormMessage>
                         </FormItem>
                     )}
                 />
-                <div className="grid grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
                     <FormField
                         control={form.control}
                         name="label"
@@ -160,11 +180,35 @@ export default function BillboardForm({storeId,initialData}: BillboardsFormProps
                                         disabled={loading}
                                         placeholder="Billboard label"
                                         {...field}
+                                        
                                     ></Input>
                                 </FormControl>
                                 <FormMessage></FormMessage>
                             </FormItem>
                         )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="toShowLabel"
+                        render={({field})=>(
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 flex-wrap">
+                                
+                                <FormControl>
+                                    <Checkbox 
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+
+                                    />
+                                </FormControl>
+                                <FormLabel>Show Label</FormLabel>
+                                <FormDescription>
+                                    This Label will be showed over the billboard.
+                                </FormDescription>
+
+                                <FormMessage></FormMessage>
+                            </FormItem>
+                        )}
+
                     />
                 </div>
                 <Button disabled={loading} className="ml-auto" type="submit">

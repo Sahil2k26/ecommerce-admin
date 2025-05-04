@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server"
 import prismadb from "@/lib/prismadb";
 import { Billboard } from "@prisma/client";
+import { log } from "console";
 
 export async function GetBillboards(storeId:string) {
     const store=await prismadb.store.findFirst({
@@ -16,6 +17,9 @@ export async function GetBillboards(storeId:string) {
             where:{
                 storeId:storeId
             },
+            include:{
+                images:true
+            },
             orderBy:{
                 createdAt:"desc"
             }
@@ -27,7 +31,9 @@ export async function GetBillboards(storeId:string) {
     }
     
 }
-export  async function CreateBillboard(storeId:string,{label,imageUrl}:{label:string,imageUrl:string}):Promise<{error?:string,message?:string,billboard?:Billboard}> {
+export  async function CreateBillboard(storeId:string,{label,images,toShowLabel}:{label:string,images:{url:string}[],toShowLabel:boolean}):Promise<{error?:string,message?:string,billboard?:Billboard}> {
+    console.log(label,images,storeId);
+    
     const {userId}=await auth();
     if(!userId){
        return {error:"You must be logged in to create a billboard"}
@@ -47,8 +53,14 @@ export  async function CreateBillboard(storeId:string,{label,imageUrl}:{label:st
         const billboard=await prismadb.billboard.create({
             data:{
                 label,
-                imageUrl,
-                storeId
+                toShowLabel,
+                storeId,
+                images:{
+                    createMany:{
+                        data:[...images.map((image)=>image)]
+                    }
+                }
+
             }
         })
 
@@ -67,7 +79,7 @@ export  async function CreateBillboard(storeId:string,{label,imageUrl}:{label:st
     
 }
 
-export async function UpdateBillboard(storeId:string,billboardId:string,{label,imageUrl}:{label:string,imageUrl:string} ){
+export async function UpdateBillboard(storeId:string,billboardId:string,{label,images,toShowLabel}:{label:string,images:{url:string}[],toShowLabel:boolean} ){
     const {userId}=await auth();
     if(!userId){
        return {error:"You must be logged in to update the billboard"}
@@ -85,10 +97,14 @@ export async function UpdateBillboard(storeId:string,billboardId:string,{label,i
    
     //if(!store) return {error:"Store doesn't exits"};
     try{
-        const res=await prismadb.billboard.update(({
+        await prismadb.billboard.update(({
             data:{
                 label,
-                imageUrl
+                toShowLabel,
+                images:{
+                    deleteMany:{}
+                }
+
             },
             where:{
                 id:billboardId,
@@ -96,6 +112,19 @@ export async function UpdateBillboard(storeId:string,billboardId:string,{label,i
                 
             }
         }))
+        const res=await prismadb.billboard.update({
+            data:{
+                images:{
+                    createMany:{
+                        data:[...images.map((image)=>image)]
+                    }
+                }
+            },
+            where:{
+                id:billboardId
+            }
+        })
+
         return {message:"updated successfully!" ,billboard:res}
 
     }catch(e){

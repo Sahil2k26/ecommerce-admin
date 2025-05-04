@@ -5,6 +5,9 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import prismadb from "@/lib/prismadb";
 import { ModeToggle } from "./theme-toggle";
+import { Button } from "./ui/button";
+import { Menu } from "lucide-react";
+import { MobileSideBar } from "./mobile-sidebar";
 
 export async function NavBar(){
     const {userId}= await auth();
@@ -19,6 +22,7 @@ export async function NavBar(){
     return (
         <div className=" border-b ">
             <div className="flex h-16 items-center px-4">
+                <MobileSideBar />
                 <StoreSwitcher items={stores}/>
                 <MainNav className="mx-6"></MainNav>
                 <div className="ml-auto flex items-center space-x-4">

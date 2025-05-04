@@ -5,6 +5,8 @@ import { ClerkProvider, UserButton } from "@clerk/nextjs";
 import { ModalProvider } from "@/providers/modal-provider";
 import { ToastProvider } from "@/providers/toast-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-siderbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,21 +30,33 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+      
         <ThemeProvider
           attribute={"class"}
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        >
+        > 
+          {/* <AppSidebar /> */}
           <ToastProvider />
           <ModalProvider />
-          {children}
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              <main>
+              {children}
+              </main>
+            </SidebarInset>
+
+          </SidebarProvider>
+        
 
         </ThemeProvider>
+       
        
       </body>
     </html>

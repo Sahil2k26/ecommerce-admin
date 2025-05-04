@@ -8,6 +8,9 @@ export default async function BillboardPage({
     const billboard = await prismadb.billboard.findFirst({
         where: {
             id: billboardId
+        },
+        include:{
+            images:true
         }
     })
     return <div className="flex-col">

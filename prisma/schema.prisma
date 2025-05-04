@@ -14,28 +14,34 @@ datasource db {
 }
 
 model Store {
-  id         String      @id @default(cuid())
-  name       String
-  userId     String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  Billboards Billboard[] @relation("StoreToBillboard")
-  Categories Category[]
-  sizes      Size[]
-  colors     Color[]
-  products   Product[]
-  orders     Order[]
+  id          String      @id @default(cuid())
+  name        String
+  userId      String
+  description String?
+  instaUrl    String?
+  facebookUrl String?
+  contactNo   String?
+  address     String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Billboards  Billboard[] @relation("StoreToBillboard")
+  Categories  Category[]
+  sizes       Size[]
+  colors      Color[]
+  products    Product[]
+  orders      Order[]
 }
 
 model Billboard {
-  id         String     @id @default(cuid())
-  storeId    String
-  store      Store      @relation("StoreToBillboard", fields: [storeId], references: [id])
-  label      String
-  imageUrl   String
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  Categories Category[]
+  id          String     @id @default(cuid())
+  storeId     String
+  store       Store      @relation("StoreToBillboard", fields: [storeId], references: [id])
+  label       String
+  toShowLabel Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  Categories  Category[]
+  images      Image[]
 
   @@index([storeId])
 }
@@ -92,15 +98,18 @@ model Product {
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   orderItems OrderItem[]
+  quantity   Int         @default(1)
 }
 
 model Image {
-  id        String   @id @default(cuid())
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String    @id @default(cuid())
+  productId   String?
+  product     Product?   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  billboardId String?
+  billboard   Billboard? @relation(fields: [billboardId], references: [id], onDelete: Cascade)
+  url         String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Order {

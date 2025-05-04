@@ -17,6 +17,9 @@ export async function GET(req: NextRequest,
             where: {
                 storeId: storeId
             },
+            include:{
+                images:true
+            },
             orderBy: {
                 createdAt: "desc"
             }
@@ -37,7 +40,7 @@ export async function POST(req: NextRequest,
         return NextResponse.json({ error: "You must be logged in to create a billboard" },{status:401});
     }
     const {storeId}=await params;
-    const {label,imageUrl}=await req.json();
+    const {label,images,toShowLabel}=await req.json();
     if (!label || label.trim() === "") {
         return NextResponse.json({ error: "Billboard name is required" },{status:400});
     }
@@ -53,8 +56,13 @@ export async function POST(req: NextRequest,
         const billboard = await prismadb.billboard.create({
             data: {
                 label,
-                imageUrl,
-                storeId
+                toShowLabel,
+                storeId,
+                images:{
+                    createMany:{
+                        data:[...images||[].map((image)=>image)]
+                    }
+                }
             }
         })
 

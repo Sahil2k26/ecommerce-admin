@@ -18,6 +18,9 @@ export async function GET(req: NextRequest,
             where: {
                 storeId: storeId,
                 id:billboardId
+            },
+            include:{
+                images:true
             }
         })
         return NextResponse.json({ message: "Found", billboard });
