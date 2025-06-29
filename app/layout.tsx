@@ -7,7 +7,7 @@ import { ToastProvider } from "@/providers/toast-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-siderbar";
-
+import { ClerkThemeProvider } from "@/providers/clerk-theme-wrapper";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,37 +29,39 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      
+
         <ThemeProvider
           attribute={"class"}
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        > 
-          {/* <AppSidebar /> */}
-          <ToastProvider />
-          <ModalProvider />
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              <main>
-              {children}
-              </main>
-            </SidebarInset>
+        >
+          <ClerkThemeProvider>
+            {/* <AppSidebar /> */}
+            <ToastProvider />
+            <ModalProvider />
+            <SidebarProvider>
+              <AppSidebar />
+              <SidebarInset>
+                <main>
+                  {children}
+                </main>
+              </SidebarInset>
 
-          </SidebarProvider>
-        
+            </SidebarProvider>
 
+          </ClerkThemeProvider>
         </ThemeProvider>
-       
-       
+
+
+
       </body>
     </html>
-    </ClerkProvider> 
+
   );
 }

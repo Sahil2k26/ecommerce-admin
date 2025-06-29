@@ -17,7 +17,7 @@ export default async function Settings(props: SettingsProps) {
             userId
         }
     })
-    if (!store) redirect("/");
+    if (!store) redirect("/home");
 
 
     return (
