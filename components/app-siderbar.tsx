@@ -125,6 +125,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useAuth } from "@clerk/nextjs"
 
 // Navigation items for the store management
 const navigationItems = [
@@ -176,6 +177,11 @@ const navigationItems = [
 export function AppSidebar() {
   const params = useParams()
   const pathname = usePathname()
+  const { userId } = useAuth();
+  if (!userId) {
+    return <></>
+  }
+
   const storeId = params?.storeId as string
 
   // Function to check if a navigation item is active

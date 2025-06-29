@@ -3,29 +3,29 @@ import { redirect } from "next/navigation";
 import prismadb from "@/lib/prismadb";
 import { NavBar } from "@/components/Navbar";
 
-export default async function DashboardLayout({ children,params }:{
+export default async function DashboardLayout({ children, params }: {
     children: React.ReactNode,
-    params:Promise<{storeId:string}>
+    params: Promise<{ storeId: string }>
 }) {
-    const {userId}=await auth();
-    if(!userId){
+    const { userId } = await auth();
+    if (!userId) {
         redirect('/signin');
     }
-    const {storeId}=await params;
-    const store=await prismadb.store.findFirst({
-        where:{
-            id:storeId,
+    const { storeId } = await params;
+    const store = await prismadb.store.findFirst({
+        where: {
+            id: storeId,
             userId
         }
     })
-    if(!store) redirect("/");
+    if (!store) redirect("/");
 
     return (
         <>
-        <NavBar></NavBar>
-        {children}
+            <NavBar></NavBar>
+            {children}
         </>
-            
-        
+
+
     );
 }
