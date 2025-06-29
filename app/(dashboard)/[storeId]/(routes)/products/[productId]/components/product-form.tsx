@@ -9,7 +9,7 @@ import ImageUpload from "@/components/ui/image-upload"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Category, Color, Image, Product, Size } from "@prisma/client"
+import { Category, Color, Image, Size } from "@prisma/client"
 import { Circle, Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -63,8 +63,6 @@ export default function ProductForm({ storeId, initialData, categories, colors, 
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
-    //const params=useParams();
-
 
     const title = initialData ? "Edit product" : "Create product";
     const description = initialData ? "Manage your store product" : "Add a new product";
@@ -127,8 +125,13 @@ export default function ProductForm({ storeId, initialData, categories, colors, 
 
 
 
-        } catch (e: any) {
-            toast.error(e.message || "Something went wrong,")
+        } catch (e: unknown) {
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
+
+            // toast.error(e.message || "Something went wrong,")
         }
         finally {
             setLoading(false)
@@ -154,9 +157,13 @@ export default function ProductForm({ storeId, initialData, categories, colors, 
 
 
 
-        } catch (e: any) {
+        } catch (e: unknown) {
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
 
-            toast.error(e.message || "Internal server error");
+            // toast.error(e.message || "Internal server error");
         } finally {
             setLoading(false)
         }

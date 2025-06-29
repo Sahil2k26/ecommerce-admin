@@ -23,8 +23,8 @@ export async function GET(req: NextRequest,
         })
         return NextResponse.json({ message: "Found", colors });
 
-    } catch (e) {
-        return NextResponse.json({ error: "Failed to get colors" }, { status: 500 });
+    } catch (e: unknown) {
+        return NextResponse.json({ error: "Failed to get colors", errorObj: e }, { status: 500 });
     }
 
 }
@@ -34,15 +34,15 @@ export async function POST(req: NextRequest,
 ) {
     const { userId } = await auth();
     if (!userId) {
-        return NextResponse.json({ error: "You must be logged in to create a color" },{status:401});
+        return NextResponse.json({ error: "You must be logged in to create a color" }, { status: 401 });
     }
-    const {storeId}=await params;
-    const {value,name}=await req.json();
+    const { storeId } = await params;
+    const { value, name } = await req.json();
     if (!name || name.trim() === "") {
-        return NextResponse.json({ error: "color name is required" },{status:400});
+        return NextResponse.json({ error: "color name is required" }, { status: 400 });
     }
     if (!value || value.trim() === "") {
-        return NextResponse.json({ error: "color value is required" },{status:400});
+        return NextResponse.json({ error: "color value is required" }, { status: 400 });
     }
     const store = await prismadb.store.findFirst({
         where: {
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest,
         }
     })
 
-    if (!store ) return  NextResponse.json({ error: "No store exists " },{status:404});
+    if (!store) return NextResponse.json({ error: "No store exists " }, { status: 404 });
     // Create a color
     try {
         const color = await prismadb.color.create({
@@ -68,8 +68,8 @@ export async function POST(req: NextRequest,
         })
 
     }
-    catch (error) {
-        return NextResponse.json({ error: "Failed to create color" },{status:500});
+    catch (e: unknown) {
+        return NextResponse.json({ error: "Failed to create color", errorObj: e }, { status: 500 });
     }
 
 

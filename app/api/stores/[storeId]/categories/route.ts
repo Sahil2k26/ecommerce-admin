@@ -23,8 +23,8 @@ export async function GET(req: NextRequest,
         })
         return NextResponse.json({ message: "Found", categories });
 
-    } catch (e) {
-        return NextResponse.json({ error: "Failed to get categories" }, { status: 500 });
+    } catch (e: unknown) {
+        return NextResponse.json({ error: "Failed to get categories", errorObj: e }, { status: 500 });
     }
 
 }
@@ -34,12 +34,12 @@ export async function POST(req: NextRequest,
 ) {
     const { userId } = await auth();
     if (!userId) {
-        return NextResponse.json({ error: "You must be logged in to create a category" },{status:401});
+        return NextResponse.json({ error: "You must be logged in to create a category" }, { status: 401 });
     }
-    const {storeId}=await params;
-    const {billboardId,name}=await req.json();
+    const { storeId } = await params;
+    const { billboardId, name } = await req.json();
     if (!name || name.trim() === "") {
-        return NextResponse.json({ error: "category name is required" },{status:400});
+        return NextResponse.json({ error: "category name is required" }, { status: 400 });
     }
     const store = await prismadb.store.findFirst({
         where: {
@@ -48,13 +48,13 @@ export async function POST(req: NextRequest,
         }
     })
 
-    const billboard= await prismadb.billboard.findFirst({
+    const billboard = await prismadb.billboard.findFirst({
         where: {
-            id:billboardId,
+            id: billboardId,
             storeId
         }
     })
-    if (!store || !billboard) return  NextResponse.json({ error: "No store exists " },{status:404});
+    if (!store || !billboard) return NextResponse.json({ error: "No store exists " }, { status: 404 });
     // Create a category
     try {
         const category = await prismadb.category.create({
@@ -71,8 +71,8 @@ export async function POST(req: NextRequest,
         })
 
     }
-    catch (error) {
-        return NextResponse.json({ error: "Failed to create category" },{status:500});
+    catch (e: unknown) {
+        return NextResponse.json({ error: "Failed to create category", errorObj: e }, { status: 500 });
     }
 
 

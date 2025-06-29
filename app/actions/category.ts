@@ -2,50 +2,50 @@
 
 import { auth } from "@clerk/nextjs/server"
 import prismadb from "@/lib/prismadb";
-import { Category } from "@prisma/client";
 
-export async function GetCategories(storeId:string) {
-    const store=await prismadb.store.findFirst({
-        where:{
-            id:storeId
+
+export async function GetCategories(storeId: string) {
+    const store = await prismadb.store.findFirst({
+        where: {
+            id: storeId
         }
     })
-    if(!store) return {error:"No store exists"}
-    try{
-        const Categories=await prismadb.category.findMany({
-            where:{
-                storeId:storeId
+    if (!store) return { error: "No store exists" }
+    try {
+        const Categories = await prismadb.category.findMany({
+            where: {
+                storeId: storeId
             },
-            orderBy:{
-                createdAt:"desc"
+            orderBy: {
+                createdAt: "desc"
             }
         })
-        return {message:"Found",Categories};
+        return { message: "Found", Categories };
 
-    }catch(e){
-        return {error:"Failed to get Categories"}
+    } catch (e: unknown) {
+        return { error: "Failed to get Categories", errorObj: e }
     }
-    
+
 }
-export  async function CreateCategory(storeId:string,{name,billboardId}:{name:string,billboardId:string}):Promise<{error?:string,message?:string,Category?:Category}> {
-    const {userId}=await auth();
-    if(!userId){
-       return {error:"You must be logged in to create a Category"}
+export async function CreateCategory(storeId: string, { name, billboardId }: { name: string, billboardId: string }) {
+    const { userId } = await auth();
+    if (!userId) {
+        return { error: "You must be logged in to create a Category" }
     }
-    if(!name || name.trim()===""){
-        return {error:"Category name is required"};
+    if (!name || name.trim() === "") {
+        return { error: "Category name is required" };
     }
-    const store=await prismadb.store.findFirst({
-        where:{
-            id:storeId,
+    const store = await prismadb.store.findFirst({
+        where: {
+            id: storeId,
             userId
         }
     })
-    if(!store) return {error:"No store exists"}
+    if (!store) return { error: "No store exists" }
     // Create a Category
-    try{
-        const Category=await prismadb.category.create({
-            data:{
+    try {
+        const Category = await prismadb.category.create({
+            data: {
                 name,
                 billboardId,
                 storeId
@@ -53,75 +53,75 @@ export  async function CreateCategory(storeId:string,{name,billboardId}:{name:st
         })
 
         return {
-            message:"Category created successfully",
+            message: "Category created successfully",
             Category
         }
 
     }
-    catch(error){
-        return {error:"Failed to create the category"}
+    catch (e: unknown) {
+        return { error: "Failed to create the category", errorObj: e }
     }
-    
 
 
-    
+
+
 }
 
-export async function UpdateCategory(storeId:string,CategoryId:string,{name,billboardId}:{name:string,billboardId:string} ){
-    const {userId}=await auth();
-    if(!userId){
-       return {error:"You must be logged in to update a category"}
+export async function UpdateCategory(storeId: string, CategoryId: string, { name, billboardId }: { name: string, billboardId: string }) {
+    const { userId } = await auth();
+    if (!userId) {
+        return { error: "You must be logged in to update a category" }
     }
-    if(!name || name.trim()===""){
-        return {error:"Category name is required"};
+    if (!name || name.trim() === "") {
+        return { error: "Category name is required" };
     }
-    const store=await prismadb.store.findFirst({
-        where:{
-            id:storeId,
+    const store = await prismadb.store.findFirst({
+        where: {
+            id: storeId,
             userId
         }
     })
-    if(!store) return {error:"No store exists"}
-   
+    if (!store) return { error: "No store exists" }
+
     //if(!store) return {error:"Store doesn't exits"};
-    try{
-        const res=await prismadb.category.update(({
-            data:{
+    try {
+        const res = await prismadb.category.update(({
+            data: {
                 name,
                 billboardId
             },
-            where:{
-                id:CategoryId,
+            where: {
+                id: CategoryId,
                 storeId
-                
+
             }
         }))
-        return {message:"updated successfully!" ,Category:res}
+        return { message: "updated successfully!", Category: res }
 
-    }catch(e){
-        return {error:"Something went wrong",errorObj:e}
+    } catch (e: unknown) {
+        return { error: "Something went wrong", errorObj: e }
     }
 
 }
 
-export async function DeleteCategory(CategoryId:string){
-    const {userId}=await auth();
-    if(!userId){
-       return {error:"You must be logged in to delete a category"}
+export async function DeleteCategory(CategoryId: string) {
+    const { userId } = await auth();
+    if (!userId) {
+        return { error: "You must be logged in to delete a category" }
     }
-   
+
     //if(!store) return {error:"Store doesn't exits"};
-    try{
-        const res=await prismadb.category.delete(({
-            where:{
-                id:CategoryId
-                
+    try {
+        const res = await prismadb.category.delete(({
+            where: {
+                id: CategoryId
+
             }
         }))
-        return {message:"Deleted successfully!" ,Category:res}
+        return { message: "Deleted successfully!", Category: res }
 
-    }catch(e){
-        return {error:"Something went wrong",errorObj:e}
+    } catch (e: unknown) {
+        return { error: "Something went wrong", errorObj: e }
     }
 
 }

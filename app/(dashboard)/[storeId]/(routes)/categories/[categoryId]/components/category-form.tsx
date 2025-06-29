@@ -71,8 +71,13 @@ export default function CategoryForm({ storeId, initialData, billboards }: Categ
 
 
 
-        } catch (e: any) {
-            toast.error(e.message || "Something went wrong,")
+        } catch (e: unknown) {
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
+
+            // toast.error(e.message || "Something went wrong,")
         }
         finally {
             setLoading(false)
@@ -96,9 +101,13 @@ export default function CategoryForm({ storeId, initialData, billboards }: Categ
             router.refresh();
 
 
-        } catch (e: any) {
+        } catch (e: unknown) {
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
 
-            toast.error(e.message == "Something went wrong" ? "Make sure you have removed all the products using this category" : e.message);
+            // toast.error(e.message == "Something went wrong" ? "Make sure you have removed all the products using this category" : e.message);
         } finally {
             setLoading(false)
         }

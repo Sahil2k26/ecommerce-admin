@@ -17,8 +17,8 @@ export async function GET(req: NextRequest,
             where: {
                 storeId: storeId
             },
-            include:{
-                images:true
+            include: {
+                images: true
             },
             orderBy: {
                 createdAt: "desc"
@@ -26,8 +26,8 @@ export async function GET(req: NextRequest,
         })
         return NextResponse.json({ message: "Found", billboards });
 
-    } catch (e) {
-        return NextResponse.json({ error: "Failed to get billboards" }, { status: 500 });
+    } catch (e: unknown) {
+        return NextResponse.json({ error: "Failed to get billboards", errorObj: e }, { status: 500 });
     }
 
 }
@@ -37,12 +37,12 @@ export async function POST(req: NextRequest,
 ) {
     const { userId } = await auth();
     if (!userId) {
-        return NextResponse.json({ error: "You must be logged in to create a billboard" },{status:401});
+        return NextResponse.json({ error: "You must be logged in to create a billboard" }, { status: 401 });
     }
-    const {storeId}=await params;
-    const {label,images,toShowLabel}=await req.json();
+    const { storeId } = await params;
+    const { label, images, toShowLabel } = await req.json();
     if (!label || label.trim() === "") {
-        return NextResponse.json({ error: "Billboard name is required" },{status:400});
+        return NextResponse.json({ error: "Billboard name is required" }, { status: 400 });
     }
     const store = await prismadb.store.findFirst({
         where: {
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest,
             userId
         }
     })
-    if (!store) return  NextResponse.json({ error: "No store exists" },{status:404});
+    if (!store) return NextResponse.json({ error: "No store exists" }, { status: 404 });
     // Create a billboard
     try {
         const billboard = await prismadb.billboard.create({
@@ -58,9 +58,9 @@ export async function POST(req: NextRequest,
                 label,
                 toShowLabel,
                 storeId,
-                images:{
-                    createMany:{
-                        data:[...images||[].map((image)=>image)]
+                images: {
+                    createMany: {
+                        data: [...images || [].map((image) => image)]
                     }
                 }
             }
@@ -72,8 +72,8 @@ export async function POST(req: NextRequest,
         })
 
     }
-    catch (error) {
-        return NextResponse.json({ error: "Failed to create billboard" },{status:500});
+    catch (e: unknown) {
+        return NextResponse.json({ error: "Failed to create billboard", errorObj: e }, { status: 500 });
     }
 
 

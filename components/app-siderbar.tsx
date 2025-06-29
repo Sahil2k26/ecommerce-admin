@@ -172,9 +172,6 @@ const navigationItems = [
   },
 ]
 
-interface AppSidebarProps {
-  storeName?: string
-}
 
 export function AppSidebar() {
   const params = useParams()

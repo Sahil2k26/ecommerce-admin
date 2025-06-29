@@ -37,9 +37,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             router.refresh();
             toast.success(res.message || "Deleted successfully")
 
-        } catch (e: any) {
+        } catch (e: unknown) {
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
 
-            toast.error(e.message || "Internal server error");
+            // toast.error(e.message || "Internal server error");
         } finally {
             setLoading(false)
             router.refresh();

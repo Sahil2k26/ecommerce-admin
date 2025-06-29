@@ -1,12 +1,9 @@
-import { UserButton, useUser } from "@clerk/nextjs";
-import { MainNav } from "@/components/main-nav";
+import { UserButton } from "@clerk/nextjs";
 import StoreSwitcher from "@/components/store-switcher";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import prismadb from "@/lib/prismadb";
 import { ModeToggle } from "./theme-toggle";
-import { Button } from "./ui/button";
-import { Menu } from "lucide-react";
 import { MobileSideBar } from "./mobile-sidebar";
 
 

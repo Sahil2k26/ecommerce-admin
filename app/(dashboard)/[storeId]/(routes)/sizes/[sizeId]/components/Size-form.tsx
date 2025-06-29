@@ -5,7 +5,6 @@ import AlertModal from "@/components/modals/alert-modal"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import Heading from "@/components/ui/Heading"
-import ImageUpload from "@/components/ui/image-upload"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -70,8 +69,13 @@ export default function SizeForm({ storeId, initialData }: SizesFormProps) {
 
 
 
-        } catch (e: any) {
-            toast.error(e.message || "Something went wrong,")
+        } catch (e: unknown) {
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
+
+            // toast.error(e.message || "Something went wrong,")
         }
         finally {
             setLoading(false)
@@ -97,9 +101,14 @@ export default function SizeForm({ storeId, initialData }: SizesFormProps) {
 
 
 
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.log(e);
-            toast.error(e.message == "Something went wrong" ? "Make sure you have removed all the products using this size" : e.message);
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
+
+            // toast.error(e.message == "Something went wrong" ? "Make sure you have removed all the products using this size" : e.message);
             //toast.error( e.message || "Something went wrong")
         } finally {
             setLoading(false)

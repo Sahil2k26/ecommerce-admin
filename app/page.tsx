@@ -174,8 +174,8 @@ export default function LandingPage() {
                         <div>
                             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">Built for Modern Ecommerce</h2>
                             <p className="text-lg text-muted-foreground mb-6">
-                                Storix was created by ecommerce experts who understand the challenges of managing multiple online
-                                stores. We've built a platform that scales with your business and adapts to your needs.
+                                {"Storix was created by ecommerce experts who understand the challenges of managing multiple online"}
+                                {"stores. We've built a platform that scales with your business and adapts to your needs."}
                             </p>
                             <div className="space-y-4">
                                 <div className="flex items-center space-x-3">
@@ -249,8 +249,8 @@ export default function LandingPage() {
                             </CardHeader>
                             <CardContent>
                                 <p className="text-muted-foreground">
-                                    "Storix has completely transformed how I manage my online stores. The analytics are incredible and the
-                                    AI features have boosted my sales by 40%!"
+                                    {` "Storix has completely transformed how I manage my online stores. The analytics are incredible and the
+                                    AI features have boosted my sales by 40%!"`}
                                 </p>
                             </CardContent>
                         </Card>
@@ -275,8 +275,8 @@ export default function LandingPage() {
                             </CardHeader>
                             <CardContent>
                                 <p className="text-muted-foreground">
-                                    "The multi-store management feature is a game-changer. I can now handle 5 different stores from one
-                                    dashboard. Absolutely love it!"
+                                    {`"The multi-store management feature is a game-changer. I can now handle 5 different stores from one
+                                    dashboard. Absolutely love it!"`}
                                 </p>
                             </CardContent>
                         </Card>
@@ -301,8 +301,8 @@ export default function LandingPage() {
                             </CardHeader>
                             <CardContent>
                                 <p className="text-muted-foreground">
-                                    "The API integration made connecting my custom storefront so easy. Customer support is also top-notch
-                                    - they helped me set everything up perfectly."
+                                    {`"The API integration made connecting my custom storefront so easy. Customer support is also top-notch
+                                    - they helped me set everything up perfectly."`}
                                 </p>
                             </CardContent>
                         </Card>
@@ -315,7 +315,7 @@ export default function LandingPage() {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">Get in Touch</h2>
-                        <p className="text-xl text-muted-foreground">Have questions? We'd love to hear from you.</p>
+                        <p className="text-xl text-muted-foreground">{`Have questions? We'd love to hear from you.`}</p>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -353,7 +353,7 @@ export default function LandingPage() {
                         <Card>
                             <CardHeader>
                                 <CardTitle>Send us a message</CardTitle>
-                                <CardDescription>We'll get back to you within 24 hours.</CardDescription>
+                                <CardDescription>{`We'll get back to you within 24 hours.`}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">

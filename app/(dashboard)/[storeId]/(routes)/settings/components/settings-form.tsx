@@ -11,7 +11,6 @@ import { Separator } from "@/components/ui/separator"
 import { useOrigin } from "@/hooks/use-origin"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Store } from "@prisma/client"
-import axios, { AxiosError } from "axios"
 import { Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -63,11 +62,16 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
 
 
 
-        } catch (e: any) {
-            if (e instanceof AxiosError) {
-                toast.error(e.response?.data.error || e.message);
-            }
-            else toast.error(e.message || "Something went wrong,")
+        } catch (e: unknown) {
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
+
+            // if (e instanceof AxiosError) {
+            //     toast.error(e.response?.data.error || e.message);
+            // }
+            // else toast.error(e.message || "Something went wrong,")
         }
         finally {
             setLoading(false)
@@ -89,8 +93,13 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
             router.refresh();
 
 
-        } catch (e: any) {
-            toast.error(e.message || "Make sure you have removed all the products and categories first");
+        } catch (e: unknown) {
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
+
+            // toast.error(e.message || "Make sure you have removed all the products and categories first");
         } finally {
             setLoading(false)
         }

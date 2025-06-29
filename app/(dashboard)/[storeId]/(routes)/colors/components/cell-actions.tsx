@@ -41,8 +41,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             }, 150);
 
 
-        } catch (e: any) {
-            toast.error(e.message == "Something went wrong" ? "Make sure you have removed all the products using this color" : e.message);
+        } catch (e: unknown) {
+            const message = e instanceof Error
+                ? e.message
+                : "Something went wrong.";
+            toast.error(message);
+
+            // toast.error(e.message == "Something went wrong" ? "Make sure you have removed all the products using this color" : e.message);
             //toast.error( e.message || "something went wrong");
         } finally {
             setLoading(false)
