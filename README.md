@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛍️ Storix — Ecommerce Admin Platform
 
-## Getting Started
+**Storix** is a powerful and extensible admin dashboard that enables users to create and manage multiple ecommerce stores. It provides robust tools for managing products, categories, billboards, sizes, colors, and detailed analytics on sales and orders. It also includes a complete checkout system and exposes APIs that can be integrated with custom storefronts.
 
-First, run the development server:
+> 🚀 Coming Soon: AI-powered inventory optimization, sales prediction, and deep analytics for smarter ecommerce decisions.
+
+---
+
+## ✨ Features
+
+- 🔧 Multi-store support
+- 🧩 Product, category, size, color, and billboard management
+- 🛒 Checkout system integration
+- 📊 Detailed analytics for orders and sales
+- 📦 Cloudinary-based image uploads
+- 🔐 Secure authentication with Clerk
+- 🔗 Public APIs to power custom storefronts
+- 🤖 Planned AI features: inventory optimization, sales prediction
+
+---
+
+## ⚙️ Tech Stack
+
+- **Frontend**: [Next.js](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/)
+- **UI**: [ShadCN UI](https://ui.shadcn.com/)
+- **Authentication**: [Clerk](https://clerk.dev/)
+- **Image Hosting**: [Cloudinary](https://cloudinary.com/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/) with [Prisma ORM](https://www.prisma.io/)
+
+---
+
+## 🚀 Getting Started
+
+### 📦 Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/sk226/storix-admin.git
+cd storix-admin
+```
+ 
+### Install Dependencies
+
+```bash
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 📁 Set Up Environment Variables
+-- Create a .env file in the root directory and add the following:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Clerk
+- NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your-clerk-publishable-key
+- CLERK_SECRET_KEY=your-clerk-secret-key
+- NEXT_PUBLIC_CLERK_SIGN_IN_URL=/signin
+- NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup
+- NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/home
+- NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/home
 
-## Learn More
+#### Database
+- DATABASE_URL=postgresql://user:password@localhost:5432/storix
 
-To learn more about Next.js, take a look at the following resources:
+#### Cloudinary
+- NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Setup the Database
+- If this is your first time:
+```bash
+npx prisma generate
+npx prisma migrate dev --name init
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏁 Start the Development Server
 
-## Deploy on Vercel
+```bash
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Visit http://localhost:3000 to start using Storix.
+
+# 📈 Roadmap (Upcoming Features)
+ - 🧠 AI-driven sales prediction and demand forecasting
+
+ - 📦 Smart inventory management
+
+ - 🧾 Enhanced reporting & downloadable insights
+
+ - 🌐 Multilingual support
+
+ - 🔌 3rd-party integrations (shipping, taxes, etc.)
+
+## 🤝 Contributing
+- Have ideas or want to improve the platform? Contributions are welcome! Please open issues or submit PRs.
+
+# 🛡️ License
+- MIT License © 2025 Sahil Kansal
+
+
