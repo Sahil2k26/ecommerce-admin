@@ -22,7 +22,7 @@ export default async function DashboardLayout({ children, params }: {
 
     return (
         <>
-            <NavBar></NavBar>
+            <NavBar storeId={store.id} storeName={store.name}></NavBar>
             {children}
         </>
 

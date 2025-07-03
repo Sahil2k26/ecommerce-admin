@@ -5,9 +5,10 @@ import { redirect } from "next/navigation";
 import prismadb from "@/lib/prismadb";
 import { ModeToggle } from "./theme-toggle";
 import { MobileSideBar } from "./mobile-sidebar";
+import PreviewButton from "./preview-store";
 
 
-export async function NavBar() {
+export async function NavBar({ storeId, storeName }: { storeId: string, storeName: string }) {
     const { userId } = await auth();
     if (!userId) {
         redirect("/signin");
@@ -25,6 +26,7 @@ export async function NavBar() {
                 <StoreSwitcher items={stores} />
                 {/* <MainNav className="mx-6"></MainNav> */}
                 <div className="ml-auto flex items-center space-x-4">
+                    <PreviewButton storeId={storeId} storeName={storeName} />
                     <ModeToggle />
                     <UserButton afterSwitchSessionUrl="/"
 
