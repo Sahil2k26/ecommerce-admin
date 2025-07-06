@@ -102,26 +102,33 @@ model Product {
 }
 
 model Image {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   productId   String?
   product     Product?   @relation(fields: [productId], references: [id], onDelete: Cascade)
   billboardId String?
   billboard   Billboard? @relation(fields: [billboardId], references: [id], onDelete: Cascade)
   url         String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Order {
-  id         String      @id @default(cuid())
-  storeId    String
-  store      Store       @relation(fields: [storeId], references: [id])
-  orderItems OrderItem[]
-  isPaid     Boolean     @default(false)
-  phone      String      @default("")
-  address    String      @default("")
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id             String      @id @default(cuid())
+  storeId        String
+  store          Store       @relation(fields: [storeId], references: [id])
+  orderItems     OrderItem[]
+  isPaid         Boolean     @default(false)
+  phone          String      @default("")
+  customerName   String      @default("")
+  deliveyAddress String?
+  orderStatus    OrderStatus @default(PENDING)
+  orderType      OrderType   @default(ONLINE)
+  subTotal       Int         @default(0) // Total before tax and discounts
+  tax            Int         @default(0) // Tax amount
+  discount       Int         @default(0) // Discount amount
+  total          Int         @default(0) // Final total after tax and discounts
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
 
 model OrderItem {
@@ -133,4 +140,16 @@ model OrderItem {
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum OrderType {
+  IN_STORE
+  ONLINE
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+  DELIVERED
 }

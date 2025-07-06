@@ -32,7 +32,7 @@ export async function POST(req: Request) {
                     console.log(`Stopped container ${containerId}`);
                 }
             });
-        }, 2 * 60 * 1000); // 2 minutes
+        }, 5 * 60 * 1000); // 2 minutes
         return NextResponse.json({ url: `http://localhost:${port}` });
     } catch (err: any) {
         console.error("Docker failed:", err.stderr || err.message || err);

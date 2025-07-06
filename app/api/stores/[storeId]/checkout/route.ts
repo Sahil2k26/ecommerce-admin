@@ -1,108 +1,97 @@
-import prismadb from "@/lib/prismadb"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import prismadb from "@/lib/prismadb";
 
-// TODO: ADD RAZORPAY GATEWAY
-// import Razorpay from "razorpay"
-// import { Orders } from "razorpay/dist/types/orders"
-// const razorpay= new Razorpay({
-//     key_id:process.env.RAZORPAY_KEY_ID!,
-//     key_secret:process.env.RAZORPAY_KEY_SECRET!,
+const OrderInputSchema = z.object({
+    lineItems: z.array(z.object({
+        productId: z.string().min(1),
+        quantity: z.number().min(1)
+    })),
+    customerName: z.string().min(1),
+    phone: z.string().min(1),
+    orderType: z.enum(["IN_STORE", "ONLINE"]),
+    deliveryAddress: z.string().optional()
+});
 
-// })
-
-const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-}
-
-export function OPTIONS() {
-    return NextResponse.json({}, { headers: corsHeaders })
-}
-export async function POST(req: NextRequest,
+export async function POST(
+    req: NextRequest,
     { params }: { params: Promise<{ storeId: string }> }
 ) {
-    const { storeId } = await params
-    const { productIds } = await req.json();
-    if (!productIds || productIds.length === 0) return NextResponse.json({ error: "Product ids are required" }, { status: 400 });
+    const { storeId } = await params;
+    const body = await req.json();
+    const parsed = OrderInputSchema.safeParse(body);
+    if (!parsed.success) {
+        const errors = parsed.error.errors.map(e => e.message).join(", ");
+        return NextResponse.json({ error: errors }, { status: 400 });
+    }
 
-    // const products =await prismadb.product.findMany({
-    //     where:{
-    //         storeId,
-    //         id:{
-    //             in:productIds
-    //         }
-    //     },
-    //     include:{
-    //         size:true,
-    //         images:true,
-    //         category:true,
+    const { lineItems, customerName, phone, orderType, deliveryAddress } = parsed.data;
 
-
-    //     }
-    // })
-    // const line_items:Orders.LineItems[]=[]
-    // products.forEach((p)=>{
-    //     line_items.push({
-    //         type:p.category.name,
-    //         sku:p.id,
-    //         price:(p.price*100).toString(),
-    //         variant_id:p.id,
-    //         quantity:1,
-    //         name:p.name,
-    //         offer_price:(p.price*100).toString(),
-    //         tax_amount:0,
-    //         description:"test",
-    //         dimensions:{
-    //             length:"10",
-    //             width:"10",
-    //             height:"10"
-    //         },
-    //         weight:"1700",
-    //         image_url:p.images[0].url,
-    //         product_url:p.images[0].url
-    //     })
-    // })
-    // const total=products.reduce((t,p)=>t+p.price*100,0)
-
-    // const options:Orders.RazorpayOrderCreateRequestBody={
-    //     amount:total,
-    //     currency:"INR",
-    //     receipt:"receipt#22",
-    //     notes:{},
-    //     line_items:line_items,
-    //     line_items_total:total
-    // }
-
-
+    // Entire checkout in ONE atomic transaction
     try {
-        //const order=await razorpay.orders.create(options)
+        const result = await prismadb.$transaction(async (tx) => {
+            const store = await tx.store.findUnique({
+                where: { id: storeId }
+            });
+            if (!store) throw new Error("Store not found");
 
-        const o = await prismadb.order.create({
-            data: {
-                storeId,
-                isPaid: false,
-                orderItems: {
-                    create: productIds.map((pid: string) => ({
-                        product: {
-                            connect: {
-                                id: pid
-                            }
-                        },
-                        quantity: 1
-                    }))
+            const orderItems = [];
+            let subTotal = 0;
 
+            for (const item of lineItems) {
+                const product = await tx.product.findUnique({
+                    where: { id: item.productId },
+                    select: { id: true, price: true, quantity: true }
+                });
+
+                if (!product) {
+                    throw new Error(`Product ${item.productId} not found`);
                 }
-            }
-        })
-        return NextResponse.json({ order: o.id }, { status: 200 });
-    }
-    catch (e) {
-        console.error("Error creating order", e)
-        return NextResponse.json(
-            { error: "Error creating order" },
-            { status: 500 }
-        )
-    }
+                if (product.quantity < item.quantity) {
+                    throw new Error(`Insufficient stock for ${item.productId}`);
+                }
 
+                await tx.product.update({
+                    where: { id: product.id },
+                    data: { quantity: { decrement: item.quantity } }
+                });
+
+                orderItems.push({
+                    productId: product.id,
+                    quantity: item.quantity
+                });
+
+                subTotal += product.price * item.quantity;
+            }
+
+            const tax = subTotal * 0.18;
+            const total = subTotal + tax;
+
+            const order = await tx.order.create({
+                data: {
+                    isPaid: true,
+                    storeId,
+                    customerName,
+                    phone,
+                    deliveyAddress: deliveryAddress ?? "",
+                    orderType,
+                    subTotal,
+                    tax,
+                    total,
+                    orderStatus: orderType === "ONLINE" ? "PENDING" : "COMPLETED",
+                    orderItems: {
+                        createMany: { data: orderItems }
+                    }
+                }
+            });
+
+            return order;
+        });
+
+        return NextResponse.json({ order: result }, { status: 201 });
+
+    } catch (err: any) {
+        console.error("Checkout failed:", err);
+        return NextResponse.json({ error: err.message || "Something went wrong" }, { status: 500 });
+    }
 }
