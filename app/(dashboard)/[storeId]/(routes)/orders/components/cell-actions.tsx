@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { productColumns } from "./columns"
+import { OrderColumns } from "./columns"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "@/components/ui/dropdown-menu"
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react"
 import toast from "react-hot-toast"
@@ -9,10 +9,11 @@ import { useParams, useRouter } from "next/navigation"
 import AlertModal from "@/components/modals/alert-modal"
 import { useState } from "react"
 import { DeleteProduct } from "@/app/actions/product"
+import { log } from "console"
 
 
 interface CellActionProps {
-    data: productColumns
+    data: OrderColumns
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -23,7 +24,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id);
 
-        toast.success("Product ID Copied Successfully");
+        toast.success(" ID Copied Successfully");
     }
     const onDelete = async () => {
         try {
@@ -33,8 +34,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             if (res.error) {
                 throw new Error(res.error)
             }
-
-
             toast.success(res.message || "Deleted successfully")
 
         } catch (e: unknown) {
@@ -43,6 +42,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             const message = e instanceof Error
                 ? e.message
                 : "Something went wrong.";
+
             toast.error(message);
 
             // toast.error(e.message || "Internal server error");

@@ -25,6 +25,7 @@ interface productsFormProps {
         id: string
         name: string
         isFeatured: boolean
+        quatity: number
         isArchived: boolean
         createdAt: Date
         updatedAt: Date
@@ -51,6 +52,7 @@ const formSchema = z.object({
     sizeId: z.string().min(1, "Size is required"),
     isFeatured: z.boolean().default(false),
     isArchived: z.boolean().default(false),
+    quantity: z.number().min(1, "Quantity is required").default(1),
 
 
 })
@@ -59,7 +61,7 @@ export type productsFormValues = z.infer<typeof formSchema>;
 
 export default function ProductForm({ storeId, initialData, categories, colors, sizes }: productsFormProps) {
 
-    const [open, setopen] = useState(false);
+    const [open, setopen] = useState(false); // for delete confirmation modal
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
@@ -85,6 +87,7 @@ export default function ProductForm({ storeId, initialData, categories, colors, 
                 sizeId: "",
                 isArchived: false,
                 isFeatured: false,
+                quantity: 1, // default quantity
             }
     });
 
@@ -242,6 +245,26 @@ export default function ProductForm({ storeId, initialData, categories, colors, 
 
                                             disabled={loading}
                                             placeholder="9.99"
+                                            type="number"
+                                            {...field}
+                                        ></Input>
+                                    </FormControl>
+                                    <FormMessage></FormMessage>
+                                </FormItem>
+                            )}
+
+                        />
+                        <FormField
+                            control={form.control}
+                            name="quantity"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Quantity</FormLabel>
+                                    <FormControl>
+                                        <Input
+
+                                            disabled={loading}
+                                            placeholder="1"
                                             type="number"
                                             {...field}
                                         ></Input>

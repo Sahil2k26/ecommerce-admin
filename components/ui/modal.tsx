@@ -1,10 +1,12 @@
 "use client"
 
-import { Dialog,
-     DialogContent, 
-     DialogDescription, 
-     DialogHeader, 
-     DialogTitle } from "@/components/ui/dialog"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle
+} from "@/components/ui/dialog"
 
 interface ModalProps {
     title: string
@@ -16,13 +18,13 @@ interface ModalProps {
 
 export function Modal({
     title
-    ,description,
+    , description,
     isOpen,
     onClose,
-    children}:ModalProps){
-    const onChange=(open:boolean)=>{
-        if(!open){
-            onClose()
+    children }: ModalProps) {
+    const onChange = (open: boolean) => {
+        if (!open) {
+            return null;
         }
     }
 

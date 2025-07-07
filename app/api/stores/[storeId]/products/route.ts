@@ -54,7 +54,7 @@ export async function POST(req: NextRequest,
     if (!userId) {
         return NextResponse.json({ error: "You must be logged in to create a Product" }, { status: 401 })
     }
-    const { price, name, categoryId, sizeId, colorId, isFeatured, isArchived, images } = await req.json();
+    const { price, name, categoryId, sizeId, colorId, isFeatured, isArchived, images, quantity } = await req.json();
     if (!name || name.trim() === "") {
         return NextResponse.json({ error: "Product name is required" }, { status: 400 });
     }
@@ -90,6 +90,13 @@ export async function POST(req: NextRequest,
         }
     })
     if (!color) return NextResponse.json({ error: "No color exists" }, { status: 404 })
+    if (price <= 0) {
+        return NextResponse.json({ error: "Price must be greater than 0" }, { status: 400 })
+    }
+
+    if (quantity < 1) {
+        return NextResponse.json({ error: "Quantity must be atleast 1" }, { status: 400 })
+    }
 
 
     // Create a Product
@@ -104,6 +111,7 @@ export async function POST(req: NextRequest,
                 isArchived,
                 storeId,
                 price,
+                quantity,
                 images: {
                     createMany: {
                         data: [...images.map((image: { url: string }) => image)]

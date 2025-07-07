@@ -14,14 +14,7 @@ export default async function OrdersPage({ params }: {
             storeId: storeId
         },
         include: {
-            orderItems: {
-                include: {
-                    product: true,
-                    // quantity:true
-                }
-
-            },
-
+            orderItems: true
         },
         orderBy: {
             createdAt: "desc"
@@ -31,16 +24,18 @@ export default async function OrdersPage({ params }: {
         {
 
             id: b.id,
-            phone: b.phone,
+            customerName: b.customerName,
             isPaid: b.isPaid,
-            address: b.address,
-            products: b.orderItems.map((orderItem) => (orderItem.product.name)).join(", "),
-            totalPrice: formatter.format(b.orderItems.reduce((total, orderItem) => {
-                return total + Number(orderItem.product.price)
-            }, 0)),
+            status: b.orderStatus,
+            orderType: b.orderType,
+            total: formatter.format(b.total),
+            items: b.orderItems.reduce((total, item) => {
+                return total + item.quantity;
+            }, 0),
             createdAt: format(b.createdAt, "MMMM do, yyyy")
         }
     ))
+
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">

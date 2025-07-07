@@ -11,7 +11,8 @@ interface ProductData {
     colorId: string,
     isFeatured: boolean,
     isArchived: boolean,
-    images: { url: string }[]
+    images: { url: string }[],
+    quantity: number
 }
 export async function GetProducts(storeId: string) {
     const store = await prismadb.store.findFirst({
@@ -23,7 +24,17 @@ export async function GetProducts(storeId: string) {
     try {
         const Products = await prismadb.product.findMany({
             where: {
-                storeId: storeId
+                storeId: storeId,
+                quantity: {
+                    gt: 0
+                },
+                isArchived: false
+            },
+            include: {
+                category: true,
+                size: true,
+                color: true,
+                images: true
             },
             orderBy: {
                 createdAt: "desc"
@@ -41,7 +52,7 @@ export async function CreateProduct(storeId: string, data: ProductData) {
     if (!userId) {
         return { error: "You must be logged in to create a Product" }
     }
-    const { price, name, categoryId, sizeId, colorId, isFeatured, isArchived, images } = data;
+    const { price, name, categoryId, sizeId, colorId, isFeatured, isArchived, images, quantity } = data;
     if (!name || name.trim() === "") {
         return { error: "Product name is required" };
     }
@@ -76,7 +87,13 @@ export async function CreateProduct(storeId: string, data: ProductData) {
         }
     })
     if (!color) return { error: "No color exists" }
+    if (price <= 0) {
+        return { error: "Price must be greater than 0" }
+    }
 
+    if (quantity < 1) {
+        return { error: "Quantity must be atleast 1" }
+    }
 
     // Create a Product
     try {
@@ -90,6 +107,7 @@ export async function CreateProduct(storeId: string, data: ProductData) {
                 isArchived,
                 storeId,
                 price,
+                quantity,
                 images: {
                     createMany: {
                         data: [...images.map((image) => image)]
@@ -207,15 +225,20 @@ export async function DeleteProduct(ProductId: string) {
     }
     //if(!store) return {error:"Store doesn't exits"};
     try {
-        const res = await prismadb.product.delete(({
+        const res = await prismadb.product.update(({
             where: {
                 id: ProductId
-
+            },
+            data: {
+                quantity: 0,
+                isArchived: true
             }
         }))
         return { message: "Deleted successfully!", Product: res }
 
     } catch (e: unknown) {
+        console.log(e);
+
         return { error: "Something went wrong", errorObj: e }
     }
 
