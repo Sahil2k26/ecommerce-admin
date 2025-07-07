@@ -25,7 +25,7 @@ interface productsFormProps {
         id: string
         name: string
         isFeatured: boolean
-        quatity: number
+        quantity: number
         isArchived: boolean
         createdAt: Date
         updatedAt: Date

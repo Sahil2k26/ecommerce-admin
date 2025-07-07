@@ -7,10 +7,11 @@ export default async function productPage({
     const { productId, storeId } = await params;
     const product = await prismadb.product.findFirst({
         where: {
-            id: productId
+            id: productId,
+            storeId: storeId,
         },
-        include :{
-            images:true,
+        include: {
+            images: true,
         }
     })
     const categories = await prismadb.category.findMany({
@@ -23,18 +24,18 @@ export default async function productPage({
             storeId: storeId
         }
     })
-    const colors = await prismadb.color.findMany({  
+    const colors = await prismadb.color.findMany({
         where: {
             storeId: storeId
         }
     })
-    const formattedProduct=product? {
+    const formattedProduct = product ? {
         ...product,
-        price:product.price.toString(),
+        price: product.price.toString(),
 
-    }:null
-        
-    
+    } : null
+
+
     return <div className="flex-col">
         <div className="flex-1 space-y-4 p-8 pt-6">
             <ProductForm storeId={storeId} initialData={formattedProduct} categories={categories} colors={colors} sizes={sizes}></ProductForm>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useParams, useRouter } from "next/navigation"
 
 
 interface OrderClientProps {
@@ -18,6 +19,8 @@ interface OrderClientProps {
 export const OrderClient: React.FC<OrderClientProps> = ({ data }) => {
 
     const n = data.length
+    const router = useRouter();
+    const params = useParams();
     const stats = {
         total: n,
         paid: data.filter((item) => item.isPaid).length,
@@ -31,7 +34,9 @@ export const OrderClient: React.FC<OrderClientProps> = ({ data }) => {
         <div className="space-y-6 ">
             <div className="flex items-center justify-between">
                 <Heading title={`Orders (${n})`} description="Manage your orders" />
-                <Button className="flex items-center justify-center text-md font-semibold  gap-x-2" >
+                <Button className="flex items-center justify-center text-md font-semibold  gap-x-2"
+                    onClick={() => router.push(`/${params.storeId}/orders/new`)}
+                >
                     <Plus className="mr-2 h-4 w-4" />
                     Create
                 </Button>
