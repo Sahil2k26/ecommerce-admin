@@ -3,7 +3,6 @@ import prismadb from "@/lib/prismadb";
 import { OrderClient } from "./components/client";
 import { OrderColumns } from "./components/columns";
 import { format } from "date-fns"
-import { formatter } from "@/lib/utils";
 
 export default async function OrdersPage({ params }: {
     params: Promise<{ storeId: string }>
@@ -28,7 +27,7 @@ export default async function OrdersPage({ params }: {
             isPaid: b.isPaid,
             status: b.orderStatus,
             orderType: b.orderType,
-            total: formatter.format(b.total),
+            total: b.total,
             items: b.orderItems.reduce((total, item) => {
                 return total + item.quantity;
             }, 0),

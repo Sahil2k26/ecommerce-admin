@@ -28,7 +28,7 @@ export const OrderClient: React.FC<OrderClientProps> = ({ data }) => {
         pending: data.filter((item) => item.status === "PENDING").length,
         completed: data.filter((item) => item.status === "COMPLETED").length,
         cancelled: data.filter((item) => item.status === "CANCELLED").length,
-        revenue: data.reduce((t, item) => item.isPaid ? t + parseFloat(item.total) : t, 0),
+        revenue: data.reduce((t, item) => item.isPaid ? t + item.total : t, 0),
     }
     return (
         <div className="space-y-6 ">
@@ -56,7 +56,7 @@ export const OrderClient: React.FC<OrderClientProps> = ({ data }) => {
                         <CardTitle className="text-sm font-medium">Revenue</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-green-600">${stats.revenue.toLocaleString()}</div>
+                        <div className="text-2xl font-bold text-green-600">₹ {stats.revenue.toLocaleString()}</div>
                         <p className="text-xs text-muted-foreground">{stats.paid} payments</p>
                     </CardContent>
                 </Card>

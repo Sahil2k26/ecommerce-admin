@@ -52,7 +52,7 @@ const formSchema = z.object({
     sizeId: z.string().min(1, "Size is required"),
     isFeatured: z.boolean().default(false),
     isArchived: z.boolean().default(false),
-    quantity: z.number().min(1, "Quantity is required").default(1),
+    quantity: z.coerce.number().min(1, "Quantity is required").default(1),
 
 
 })
@@ -111,7 +111,7 @@ export default function ProductForm({ storeId, initialData, categories, colors, 
 
 
     const onSubmit = async (data: productsFormValues) => {
-        console.log(data);
+        //console.log(data);
         try {
             setLoading(true)
             const res = initialData ? await UpdateProduct(initialData.storeId, initialData.id, data) :
@@ -121,7 +121,7 @@ export default function ProductForm({ storeId, initialData, categories, colors, 
             }
             router.refresh();
             toast.success(res.message || "Done Successfully!");
-            console.log(res.Product);
+            //console.log(res.Product);
             router.push(`/${storeId}/products`)
 
 
