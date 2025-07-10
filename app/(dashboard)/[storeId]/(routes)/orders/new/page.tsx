@@ -5,12 +5,11 @@ import { format } from "date-fns"
 interface OrderPageProps {
     params: Promise<{
         storeId: string
-        orderId: string
     }>
 }
 
 export default async function OrderPage({ params }: OrderPageProps) {
-    const { storeId, orderId } = await params
+    const { storeId } = await params
     const res = await GetProducts(storeId)
     if (res.error || res.errorObj || !res.Products) {
         return (
@@ -32,18 +31,17 @@ export default async function OrderPage({ params }: OrderPageProps) {
         createdAt: format(product.createdAt, "MMMM do, yyyy"),
     }))
 
-    const isNewOrder = orderId === "new"
 
     return (
         <div className="container mx-auto p-6">
             <div className="mb-6">
-                <h1 className="text-3xl font-bold">{isNewOrder ? "Create New Order" : `Update Order #${orderId}`}</h1>
+                <h1 className="text-3xl font-bold"> Create New Order </h1>
                 <p className="text-muted-foreground">
-                    {isNewOrder ? "Add products and customer details to create a new order" : "Modify the existing order details"}
+                    Add products and customer details to create a new order
                 </p>
             </div>
 
-            <OrderForm storeId={storeId} orderId={isNewOrder ? null : orderId} products={products} isNewOrder={isNewOrder} />
+            <OrderForm storeId={storeId} products={products} />
         </div>
     )
 }

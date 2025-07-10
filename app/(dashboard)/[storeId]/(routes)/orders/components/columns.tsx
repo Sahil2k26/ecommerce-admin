@@ -2,11 +2,12 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { PaymentBadge } from "./payment-badge"
-import { CellAction } from "./cell-actions"
 import { OrderStatus, OrderType } from "@prisma/client"
 import { OrderStatusBadge } from "./order-status-badge"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
+import { DownloadInvoiceButton } from "./download-invoice-button"
+import { formatter } from "@/lib/utils"
 
 
 export type OrderColumns = {
@@ -14,7 +15,7 @@ export type OrderColumns = {
   createdAt: string
   customerName: string
   isPaid: boolean
-  total: string
+  total: number
   items: number
   status: OrderStatus
   orderType: OrderType
@@ -63,6 +64,13 @@ export const columns: ColumnDef<OrderColumns>[] = [
   {
     accessorKey: "total",
     header: "Total",
+    cell: ({ row }) => {
+      return (
+        <span className="text-sm">
+          {formatter.format(row.original.total)}
+        </span>
+      )
+    }
 
   },
   {
@@ -92,7 +100,7 @@ export const columns: ColumnDef<OrderColumns>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <CellAction data={row.original} />
+    cell: ({ row }) => <DownloadInvoiceButton orderId={row.original.id} />
   }
 
 ]

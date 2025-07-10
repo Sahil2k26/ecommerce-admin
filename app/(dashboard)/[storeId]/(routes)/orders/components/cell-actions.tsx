@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation"
 import AlertModal from "@/components/modals/alert-modal"
 import { useState } from "react"
 import { DeleteProduct } from "@/app/actions/product"
-import { log } from "console"
+
 
 
 interface CellActionProps {

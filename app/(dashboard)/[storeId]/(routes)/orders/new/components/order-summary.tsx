@@ -13,7 +13,6 @@ interface OrderSummaryProps {
     onSubmit: () => void
     isLoading: boolean
     disabled: boolean
-    isNewOrder: boolean
 }
 
 export function OrderSummary({
@@ -24,7 +23,6 @@ export function OrderSummary({
     onSubmit,
     isLoading,
     disabled,
-    isNewOrder,
 }: OrderSummaryProps) {
     return (
         <Card>
@@ -35,24 +33,24 @@ export function OrderSummary({
                 <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                         <span>Subtotal</span>
-                        <span>${subtotal.toFixed(2)}</span>
+                        <span>₹{subtotal.toFixed(2)}</span>
                     </div>
 
                     <div className="flex justify-between text-sm text-green-600">
                         <span>Discount (10%)</span>
-                        <span>-${discount.toFixed(2)}</span>
+                        <span>-₹{discount.toFixed(2)}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
                         <span>Taxes (8%)</span>
-                        <span>${taxes.toFixed(2)}</span>
+                        <span>₹{taxes.toFixed(2)}</span>
                     </div>
 
                     <Separator />
 
                     <div className="flex justify-between font-bold text-lg">
                         <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span>₹{total.toFixed(2)}</span>
                     </div>
                 </div>
 
@@ -65,7 +63,7 @@ export function OrderSummary({
                     ) : (
                         <>
                             <ShoppingCart className="mr-2 h-4 w-4" />
-                            {isNewOrder ? "Create Order" : "Update Order"}
+                            "Create Order"
                         </>
                     )}
                 </Button>

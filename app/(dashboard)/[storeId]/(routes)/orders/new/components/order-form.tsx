@@ -11,6 +11,8 @@ import { ProductCard } from "./product-card"
 import { OrderSummary } from "./order-summary"
 import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
 
 interface Product {
     id: string
@@ -32,16 +34,16 @@ interface OrderItem {
 
 interface OrderFormProps {
     storeId: string
-    orderId: string | null
     products: Product[]
-    isNewOrder: boolean
+
 }
 
-export function OrderForm({ storeId, orderId, products, isNewOrder }: OrderFormProps) {
+export function OrderForm({ storeId, products }: OrderFormProps) {
     const [customerName, setCustomerName] = useState("")
     const [phone, setPhone] = useState("")
     const [orderItems, setOrderItems] = useState<OrderItem[]>([])
     const [isLoading, setIsLoading] = useState(false)
+    const router = useRouter();
 
     // Calculate totals
     const subtotal = orderItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
@@ -98,21 +100,22 @@ export function OrderForm({ storeId, orderId, products, isNewOrder }: OrderFormP
             })
 
             if (response.ok) {
-                alert("Order created successfully!")
-                // Reset form for new orders
-                if (isNewOrder) {
-                    setCustomerName("")
-                    setPhone("")
-                    setOrderItems([])
-                }
+                toast.success("Order created successfully!")
+
             } else {
-                alert("Failed to create order")
+                toast.error("Failed to create order")
+                //alert("Failed to create order")
             }
+
+
         } catch (error) {
             console.error("Error creating order:", error)
-            alert("An error occurred while creating the order")
+            toast.error("An error occurred while creating the order")
+            //alert("An error occurred while creating the order")
         } finally {
+
             setIsLoading(false)
+            router.push(`/${storeId}/orders`)
         }
     }
 
@@ -244,7 +247,7 @@ export function OrderForm({ storeId, orderId, products, isNewOrder }: OrderFormP
                     onSubmit={handleSubmit}
                     isLoading={isLoading}
                     disabled={!customerName || !phone || orderItems.length === 0}
-                    isNewOrder={isNewOrder}
+
                 />
             </div>
         </div>

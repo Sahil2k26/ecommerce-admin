@@ -1,0 +1,56 @@
+<!-- invoice-template.html -->
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Invoice - {{orderId}}</h1>
+    <p>Customer: {{customerName}}</p>
+    <p>Phone: {{phone}}</p>
+    <p>Date: {{date}}</p>
+    <h3>Items</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each items}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{quantity}}</td>
+                <td>{{price}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <p><strong>Total:</strong> ₹{{total}}</p>
+</body>
+
+</html>
