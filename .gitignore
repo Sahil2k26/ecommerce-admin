@@ -2,6 +2,7 @@
 
 /prisma/migrations
 # dependencies
+/prisma/migrations
 /node_modules
 /.pnp
 .pnp.*

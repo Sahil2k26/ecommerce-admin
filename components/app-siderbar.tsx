@@ -109,9 +109,10 @@
 //   }
 
 "use client"
+import React from "react"
 import { useParams, usePathname } from "next/navigation"
 import Link from "next/link"
-import { Store, ImageIcon, Grid3X3, Palette, Ruler, ShoppingCart, Package, Settings, ChevronRight } from "lucide-react"
+import { Store, ImageIcon, Grid3X3, Palette, Ruler, ShoppingCart, Package, Settings, ChevronRight, BrainCircuit } from "lucide-react"
 
 import {
   Sidebar,
@@ -129,6 +130,12 @@ import { useAuth } from "@clerk/nextjs"
 
 // Navigation items for the store management
 const navigationItems = [
+  {
+    title: "Demand Forecast",
+    url: "demand_forecast",
+    icon: BrainCircuit,
+    description: "Demand Forecast",
+  },
   {
     title: "Billboards",
     url: "billboards",
@@ -171,6 +178,7 @@ const navigationItems = [
     icon: Settings,
     description: "Configure store settings",
   },
+  
 ]
 
 
@@ -215,29 +223,31 @@ export function AppSidebar() {
           <SidebarGroupLabel>Store Management</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navigationItems.map((item) => {
-                const href = storeId ? `/${storeId}/${item.url}` : "#"
-                const active = isActive(item.url)
+              {navigationItems
+                .filter((item) => item !== undefined)
+                .map((item) => {
+                  const href = storeId ? `/${storeId}/${item!.url}` : "#"
+                  const active = isActive(item!.url)
 
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={active} className={`${active ? "border-l-2 border-primary rounded-md " : ""}`} tooltip={item.description}>
-                      <Link
-                        href={href}
-                        className="flex items-center"
-                        aria-label={`Navigate to ${item.title} - ${item.description}`}
-                      >
+                  return (
+                    <SidebarMenuItem key={item!.title}>
+                      <SidebarMenuButton asChild isActive={active} className={`${active ? "border-l-2 border-primary rounded-md " : ""}`} tooltip={item!.description}>
+                        <Link
+                          href={href}
+                          className="flex items-center"
+                          aria-label={`Navigate to ${item!.title} - ${item!.description}`}
+                        >
 
-                        <item.icon className="size-4" />
+                          {React.createElement(item!.icon, { className: "size-4" })}
 
 
-                        <span>{item.title}</span>
-                        {active && <ChevronRight className="ml-auto size-4 opacity-50" />}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              })}
+                          <span>{item!.title}</span>
+                          {active && <ChevronRight className="ml-auto size-4 opacity-50" />}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
