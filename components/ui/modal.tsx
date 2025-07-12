@@ -24,7 +24,7 @@ export function Modal({
     children }: ModalProps) {
     const onChange = (open: boolean) => {
         if (!open) {
-            return null;
+            return onClose();
         }
     }
 

@@ -34,9 +34,9 @@ export async function POST(req: Request) {
             });
         }, 5 * 60 * 1000); // 2 minutes
         return NextResponse.json({ url: `http://localhost:${port}` });
-    } catch (err: any) {
-        console.error("Docker failed:", err.stderr || err.message || err);
-        return NextResponse.json({ error: "Failed to run preview container", details: err.stderr }, { status: 500 });
+    } catch (err: unknown) {
+        console.error("Docker failed:", err);
+        return NextResponse.json({ error: "Failed to run preview container", details: err }, { status: 500 });
     }
 
 }

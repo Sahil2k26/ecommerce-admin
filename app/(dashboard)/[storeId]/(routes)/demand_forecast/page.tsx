@@ -1,7 +1,6 @@
 import { AIDemandForecast } from '@/components/ai_forecast'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import prismadb from "@/lib/prismadb";
-import { Product } from '@prisma/client'
 
 
 export default async function AIDashboardPage() {
@@ -125,7 +124,7 @@ export default async function AIDashboardPage() {
         </div>
 
         {/* Main AI Forecasting Component */}
-        <AIDemandForecast  />
+        <AIDemandForecast />
       </div>
     </div>
   )

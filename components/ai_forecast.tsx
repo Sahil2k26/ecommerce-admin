@@ -20,14 +20,13 @@ import {
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
-import { 
-  Calendar, 
-  AlertTriangle, 
-  TrendingUp, 
-  Package, 
-  CloudSun, 
-  Ticket, 
-  Sun, 
+import {
+  AlertTriangle,
+  TrendingUp,
+  Package,
+  CloudSun,
+  Ticket,
+  Sun,
   Zap,
   Thermometer,
   ShoppingBag,
@@ -131,11 +130,11 @@ const CATEGORY_COLORS = {
   'Party Wear': 'bg-pink-100 text-pink-800'
 }
 
-const PLATFORM_COLORS = {
-  twitter: 'bg-blue-400',
-  instagram: 'bg-pink-500',
-  youtube: 'bg-red-500'
-}
+// const PLATFORM_COLORS = {
+//   twitter: 'bg-blue-400',
+//   instagram: 'bg-pink-500',
+//   youtube: 'bg-red-500'
+// }
 
 // ======== MAIN COMPONENT ========
 export function AIDemandForecast() {
@@ -152,7 +151,7 @@ export function AIDemandForecast() {
   const generateAIForecast = async (productId: string, days: number) => {
     setIsLoading(true)
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
+
     const product = products.find(p => p.id === productId)
     if (!product) return
 
@@ -202,11 +201,11 @@ export function AIDemandForecast() {
 
     // Generate mock social media data
     const mockSocialData: SocialMediaData[] = mockData.map((_, i) => {
-      const viralChance = product.name.includes('Graphic') ? 0.3 : 
-                         product.category === 'Party Wear' ? 0.25 : 0.1
+      const viralChance = product.name.includes('Graphic') ? 0.3 :
+        product.category === 'Party Wear' ? 0.25 : 0.1
       const isViral = Math.random() < viralChance
       const platforms: Array<'twitter' | 'instagram' | 'youtube'> = ['twitter', 'instagram', 'youtube']
-      
+
       return {
         date: mockData[i].date,
         mentions: Math.round(50 + Math.random() * (isViral ? 500 : 100)),
@@ -219,7 +218,7 @@ export function AIDemandForecast() {
         trendingHashtags: isViral ? [
           `#${product.name.replace(/\s+/g, '')}`,
           `#${product.category.replace(/\s+/g, '')}`,
-          seasonality[product.category as keyof typeof seasonality](month) > 1 ? 
+          seasonality[product.category as keyof typeof seasonality](month) > 1 ?
             `#${month >= 5 && month <= 8 ? 'Summer' : 'Winter'}Fashion` : '#TrendingNow'
         ] : [],
         platformDistribution: {
@@ -235,9 +234,9 @@ export function AIDemandForecast() {
       ...d,
       factors: {
         ...d.factors,
-        socialMediaImpact: 1 + (mockSocialData[i].mentions / 200) * 
-                         (mockSocialData[i].sentiment > 0 ? 1 : 0.5) *
-                         (mockSocialData[i].engagement / 10)
+        socialMediaImpact: 1 + (mockSocialData[i].mentions / 200) *
+          (mockSocialData[i].sentiment > 0 ? 1 : 0.5) *
+          (mockSocialData[i].engagement / 10)
       },
       socialMedia: mockSocialData[i]
     }))
@@ -276,7 +275,7 @@ export function AIDemandForecast() {
     }
 
     // Social media risks
-    const negativeSentimentDays = forecast.filter(d => 
+    const negativeSentimentDays = forecast.filter(d =>
       d.socialMedia && d.socialMedia.sentiment < -0.2
     ).length
 
@@ -337,7 +336,7 @@ export function AIDemandForecast() {
     if (socialData.length > 0) {
       const avgSentiment = socialData.reduce((sum, d) => sum + d.sentiment, 0) / socialData.length
       const totalMentions = socialData.reduce((sum, d) => sum + d.mentions, 0)
-      
+
       insights.push({
         title: "Social Buzz",
         content: `${totalMentions} mentions (${(avgSentiment * 100).toFixed(0)}% sentiment)`,
@@ -467,7 +466,7 @@ export function AIDemandForecast() {
         y: d.engagement,
         r: d.sentiment > 0 ? 10 + (d.sentiment * 5) : 5
       })),
-      backgroundColor: socialMediaData.map(d => 
+      backgroundColor: socialMediaData.map(d =>
         d.sentiment > 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
       )
     }]
@@ -502,58 +501,58 @@ export function AIDemandForecast() {
   useEffect(() => {
     // Mock product data - replace with API call
     const mockProducts: ProductData[] = [
-      { 
-        id: '1', 
-        name: 'Premium Cotton Tee', 
-        category: 'T-Shirts', 
-        currentStock: 120, 
-        leadTime: 14, 
-        reorderLevel: 80, 
-        salesVelocity: 8.5, 
+      {
+        id: '1',
+        name: 'Premium Cotton Tee',
+        category: 'T-Shirts',
+        currentStock: 120,
+        leadTime: 14,
+        reorderLevel: 80,
+        salesVelocity: 8.5,
         price: 24.99,
         imageUrl: 'https://example.com/tee.jpg'
       },
-      { 
-        id: '2', 
-        name: 'Graphic Print Tee', 
-        category: 'T-Shirts', 
-        currentStock: 85, 
-        leadTime: 10, 
-        reorderLevel: 60, 
-        salesVelocity: 6.2, 
+      {
+        id: '2',
+        name: 'Graphic Print Tee',
+        category: 'T-Shirts',
+        currentStock: 85,
+        leadTime: 10,
+        reorderLevel: 60,
+        salesVelocity: 6.2,
         price: 29.99,
         imageUrl: 'https://example.com/graphic-tee.jpg'
       },
-      { 
-        id: '3', 
-        name: 'Winter Parka', 
-        category: 'Jackets', 
-        currentStock: 45, 
-        leadTime: 21, 
-        reorderLevel: 30, 
-        salesVelocity: 3.8, 
+      {
+        id: '3',
+        name: 'Winter Parka',
+        category: 'Jackets',
+        currentStock: 45,
+        leadTime: 21,
+        reorderLevel: 30,
+        salesVelocity: 3.8,
         price: 149.99,
         imageUrl: 'https://example.com/parka.jpg'
       },
-      { 
-        id: '4', 
-        name: 'Cashmere Sweater', 
-        category: 'Sweaters', 
-        currentStock: 60, 
-        leadTime: 18, 
-        reorderLevel: 40, 
-        salesVelocity: 4.5, 
+      {
+        id: '4',
+        name: 'Cashmere Sweater',
+        category: 'Sweaters',
+        currentStock: 60,
+        leadTime: 18,
+        reorderLevel: 40,
+        salesVelocity: 4.5,
         price: 89.99,
         imageUrl: 'https://example.com/sweater.jpg'
       },
-      { 
-        id: '5', 
-        name: 'Sequin Party Top', 
-        category: 'Party Wear', 
-        currentStock: 30, 
-        leadTime: 12, 
-        reorderLevel: 25, 
-        salesVelocity: 5.1, 
+      {
+        id: '5',
+        name: 'Sequin Party Top',
+        category: 'Party Wear',
+        currentStock: 30,
+        leadTime: 12,
+        reorderLevel: 25,
+        salesVelocity: 5.1,
         price: 49.99,
         imageUrl: 'https://example.com/party-top.jpg'
       }
@@ -580,22 +579,22 @@ export function AIDemandForecast() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button 
-            variant={timeHorizon === 7 ? 'default' : 'outline'} 
+          <Button
+            variant={timeHorizon === 7 ? 'default' : 'outline'}
             size="sm"
             onClick={() => setTimeHorizon(7)}
           >
             7 Days
           </Button>
-          <Button 
-            variant={timeHorizon === 30 ? 'default' : 'outline'} 
+          <Button
+            variant={timeHorizon === 30 ? 'default' : 'outline'}
             size="sm"
             onClick={() => setTimeHorizon(30)}
           >
             30 Days
           </Button>
-          <Button 
-            variant={timeHorizon === 90 ? 'default' : 'outline'} 
+          <Button
+            variant={timeHorizon === 90 ? 'default' : 'outline'}
             size="sm"
             onClick={() => setTimeHorizon(90)}
           >
@@ -679,13 +678,13 @@ export function AIDemandForecast() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {isLoading ? <Skeleton className="h-8 w-full" /> : 
-                forecastData.length > 0 ? 
-                `${Math.round(100 - (forecastData.reduce((sum, d) => {
-                  const range = d.confidenceInterval[1] - d.confidenceInterval[0]
-                  return sum + (range / d.predictedSales)
-                }, 0) / forecastData.length * 100))}%` : 
-                'N/A'}
+              {isLoading ? <Skeleton className="h-8 w-full" /> :
+                forecastData.length > 0 ?
+                  `${Math.round(100 - (forecastData.reduce((sum, d) => {
+                    const range = d.confidenceInterval[1] - d.confidenceInterval[0]
+                    return sum + (range / d.predictedSales)
+                  }, 0) / forecastData.length * 100))}%` :
+                  'N/A'}
             </div>
           </CardContent>
           <CardFooter className="pt-0">
@@ -709,7 +708,7 @@ export function AIDemandForecast() {
             {isLoading ? (
               <Skeleton className="h-full w-full" />
             ) : (
-              <Line 
+              <Line
                 data={forecastChartData}
                 options={{
                   responsive: true,
@@ -748,7 +747,7 @@ export function AIDemandForecast() {
             {isLoading ? (
               <Skeleton className="h-full w-full" />
             ) : (
-              <Radar 
+              <Radar
                 data={factorsRadarData}
                 options={{
                   responsive: true,
@@ -784,7 +783,7 @@ export function AIDemandForecast() {
           ) : (
             <>
               <div className="h-64">
-                <Line 
+                <Line
                   data={socialTrendsChart}
                   options={{
                     responsive: true,
@@ -809,7 +808,7 @@ export function AIDemandForecast() {
                   }}
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
@@ -829,9 +828,9 @@ export function AIDemandForecast() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="h-48">
-                    <Pie 
+                    <Pie
                       data={platformDistributionData}
                       options={{
                         responsive: true,
@@ -840,22 +839,22 @@ export function AIDemandForecast() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <Heart className="h-5 w-5 text-pink-600" />
                     <div>
                       <h4 className="font-medium">Engagement Rate</h4>
                       <p className="text-sm text-muted-foreground mt-1">
-                        {socialMediaData.length ? 
-                          `${Math.round(socialMediaData.reduce((sum, d) => sum + d.engagement, 0) / socialMediaData.length)}x average` : 
+                        {socialMediaData.length ?
+                          `${Math.round(socialMediaData.reduce((sum, d) => sum + d.engagement, 0) / socialMediaData.length)}x average` :
                           'N/A'}
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="h-48">
-                    <Bubble 
+                    <Bubble
                       data={engagementBubbleData}
                       options={{
                         responsive: true,
@@ -868,7 +867,7 @@ export function AIDemandForecast() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <Share2 className="h-5 w-5 text-green-600" />
@@ -890,14 +889,14 @@ export function AIDemandForecast() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-3">
                     <Activity className="h-5 w-5 text-blue-600" />
                     <div>
                       <h4 className="font-medium">Sentiment Analysis</h4>
                       <p className="text-sm text-muted-foreground mt-1">
-                        {socialMediaData.length ? 
-                          `${Math.round((socialMediaData.reduce((sum, d) => sum + d.sentiment, 0) / socialMediaData.length * 100))}% positive` : 
+                        {socialMediaData.length ?
+                          `${Math.round((socialMediaData.reduce((sum, d) => sum + d.sentiment, 0) / socialMediaData.length * 100))}% positive` :
                           'N/A'}
                       </p>
                     </div>
@@ -996,7 +995,7 @@ export function AIDemandForecast() {
                     <div>
                       <h4 className="font-medium">Viral Opportunity</h4>
                       <p className="text-sm text-muted-foreground">
-                        Product is trending with hashtags: {socialMediaData[0].trendingHashtags.join(', ')}. 
+                        Product is trending with hashtags: {socialMediaData[0].trendingHashtags.join(', ')}.
                         Increase social ad spend by 25% to capitalize.
                       </p>
                     </div>
@@ -1009,7 +1008,7 @@ export function AIDemandForecast() {
                     <div>
                       <h4 className="font-medium">Sentiment Alert</h4>
                       <p className="text-sm text-muted-foreground">
-                        Negative sentiment detected. Review recent customer feedback and 
+                        Negative sentiment detected. Review recent customer feedback and
                         consider promotional adjustments.
                       </p>
                     </div>
@@ -1022,7 +1021,7 @@ export function AIDemandForecast() {
                     <h4 className="font-medium">Inventory Optimization</h4>
                     <p className="text-sm text-muted-foreground">
                       Suggested reorder point: {Math.round(
-                        (products.find(p => p.id === selectedProduct)?.leadTime || 0) * 
+                        (products.find(p => p.id === selectedProduct)?.leadTime || 0) *
                         (forecastData.reduce((sum, d) => sum + d.predictedSales, 0) / forecastData.length)
                       )} units
                     </p>
@@ -1045,7 +1044,7 @@ export function AIDemandForecast() {
                     <div>
                       <h4 className="font-medium">Influencer Collaboration</h4>
                       <p className="text-sm text-muted-foreground">
-                        Reach out to {socialMediaData[0].influencers.map(i => i.handle).join(', ')} 
+                        Reach out to {socialMediaData[0].influencers.map(i => i.handle).join(', ')}
                         for potential partnerships.
                       </p>
                     </div>
@@ -1075,7 +1074,7 @@ export function AIDemandForecast() {
             </p>
           </CardHeader>
           <CardContent className="h-64">
-            <Bar 
+            <Bar
               data={dailyPatternData}
               options={{
                 responsive: true,
@@ -1096,7 +1095,7 @@ export function AIDemandForecast() {
             {isLoading ? (
               <Skeleton className="h-full w-full" />
             ) : (
-              <Pie 
+              <Pie
                 data={{
                   labels: ['Current Stock', '30-Day Demand'],
                   datasets: [{

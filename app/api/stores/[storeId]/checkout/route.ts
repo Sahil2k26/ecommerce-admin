@@ -92,8 +92,8 @@ export async function POST(
 
         return NextResponse.json({ order: result }, { status: 201 });
 
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error("Checkout failed:", err);
-        return NextResponse.json({ error: err.message || "Something went wrong" }, { status: 500 });
+        return NextResponse.json({ error: err || "Something went wrong" }, { status: 500 });
     }
 }
