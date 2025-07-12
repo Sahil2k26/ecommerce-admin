@@ -1,35 +1,70 @@
-# 🛍️ Storix — Ecommerce Admin Platform
+# 🛍️ Storix — Intelligent Ecommerce Admin Platform
 
-**Storix** is a powerful and extensible admin dashboard that enables users to create and manage multiple ecommerce stores. It provides robust tools for managing products, categories, billboards, sizes, colors, and detailed analytics on sales and orders. It also includes a complete checkout system and exposes APIs that can be integrated with custom storefronts.
-
-> 🚀 Coming Soon: AI-powered inventory optimization, sales prediction, and deep analytics for smarter ecommerce decisions.
+**Storix** is a powerful, AI-augmented admin dashboard built for modern ecommerce. It enables store owners to manage inventory, process orders (POS and online), and preview live storefronts instantly. Built with extensibility and scalability in mind, Storix empowers retail businesses with real-time insights, public APIs, and automation to streamline inventory management and last-mile delivery.
 
 ---
 
 ## ✨ Features
 
-- 🔧 Multi-store support
-- 🧩 Product, category, size, color, and billboard management
-- 🛒 Checkout system integration
-- 📊 Detailed analytics for orders and sales
-- 📦 Cloudinary-based image uploads
-- 🔐 Secure authentication with Clerk
-- 🔗 Public APIs to power custom storefronts
-- 🤖 Planned AI features: inventory optimization, sales prediction
+### ✅ Core Features
+
+- 🏪 **Multi-store Support** – Manage multiple stores from a single dashboard
+- 📦 **Product Management** – Add/edit/delete products with variants (size, color, image, quantity)
+- 🗂️ **Category & Billboard Management** – Organize and promote products effectively
+- 🛍️ **POS Order Creation** – In-store order placement with tax calculation and payment status
+- 📄 **Invoice Generation** – Auto-generate downloadable PDF invoices with product images
+- 🔁 **Inventory Sync** – Automatically decrement stock during order placement
+- 📤 **Cloudinary Image Uploads** – Upload and preview product and billboard images
+- 🔐 **Secure Auth** – Powered by Clerk for robust authentication
+- 🧾 **Admin-Only Access** – Per-store access control based on user ID
+- 📊 **Sales & Orders Analytics** – Track revenue, order trends, and product performance
+
+### 🧠 AI Features (Simulated)
+
+- 📈 **AI Demand Forecasting**
+  - Predict demand based on seasonality, weather, events, and trends
+  - Adjustable forecast range: 7, 30, or 90 days
+  - Confidence intervals to assess prediction certainty
+
+- 🚨 **Risk Detection**
+  - Detect and warn about stockouts or overstock risks
+  - Color-coded warnings and AI-generated action recommendations
+
+- 📚 **Product Insights**
+  - AI-generated text summaries for demand drivers per product
+  - Lead time + current stock visibility for smarter restocking
+
+- 📊 **Interactive Visualization**
+  - Forecast trends (line charts) and impact factors (bar charts)
+  - Responsive UI built for mobile and desktop
+
+### 🌐 API & Dev Tools
+
+- 🔗 **Public Storefront API**
+  - Every store has REST APIs to fetch products, categories, and banners
+  - Build your own storefront or integrate with mobile apps
+
+- 🐳 **Dynamic Storefront Previews**
+  - On-demand Dockerized Next.js storefronts via `Preview` button
+  - Automatically spins up container and maps to URL like `/preview/:storeId`
+  - Preview auto-shuts down after 10 minutes
 
 ---
 
 ## ⚙️ Tech Stack
 
-- **Frontend**: [Next.js](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/)
-- **UI**: [ShadCN UI](https://ui.shadcn.com/)
-- **Authentication**: [Clerk](https://clerk.dev/)
+- **Frontend**: [Next.js 15](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/)
+- **Backend**: [App Router API Routes], [Prisma ORM](https://www.prisma.io/), PostgreSQL
+- **UI**: [TailwindCSS](https://tailwindcss.com/), [ShadCN/UI](https://ui.shadcn.com/)
 - **Image Hosting**: [Cloudinary](https://cloudinary.com/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/) with [Prisma ORM](https://www.prisma.io/)
+- **Auth**: [Clerk.dev](https://clerk.dev/)
+- **PDF & Invoice**: `puppeteer`, dynamic HTML templates
+- **AI Simulation**: Fake data + chart rendering (based on seasonal patterns & event mock data)
+- **Containerization**: Docker + dynamic port allocation
 
 ---
 
-## 🚀 Getting Started
+## 🏁 Getting Started
 
 ### 📦 Clone the Repository
 
@@ -78,21 +113,59 @@ npm run dev
 
 - Visit http://localhost:3000 to start using Storix.
 
-# 📈 Roadmap (Upcoming Features)
- - 🧠 AI-driven sales prediction and demand forecasting
+---
 
- - 📦 Smart inventory management
+## 🧠 AI Forecasting Component Demo
 
- - 🧾 Enhanced reporting & downloadable insights
+You can preview AI-powered dashboards under the `/demand-forecast` route. Forecasting simulates:
 
- - 🌐 Multilingual support
+- 🌤️ **Weather/event demand impact**
+- 🎄 **Holiday/event spikes** (Black Friday, Christmas, etc.)
+- 📅 **Weekend vs. weekday trends**
+- 🚨 **Stock risk detection & reorder recommendations**
 
- - 🔌 3rd-party integrations (shipping, taxes, etc.)
+---
+
+## 🔌 Public Store API
+
+Each store exposes REST APIs that can be used to power custom ecommerce storefronts:
+
+- `GET /api/public/:storeId/products`
+- `GET /api/public/:storeId/categories`
+- `GET /api/public/:storeId/billboards`
+
+---
+
+## 📦 Dynamic Storefront Previews
+
+Preview your store in real-time via containerized deployments:
+
+1. Click the **Preview** button in the store settings or admin dashboard.
+2. A backend API spins up a **Docker container** with your store and connects it to your store's API (`NEXT_PUBLIC_API_URL`).
+3. A unique preview URL like `http://localhost:PORT/preview/:storeName` is generated.
+4. 🔒 Auto shutdown after **10 minutes** to save resources.
+
+---
+
+## 📈 Roadmap
+
+- 🤖 Real AI integration with **OpenAI**, **Vertex AI**, or **HuggingFace**
+- 📱 Mobile **POS companion app**
+- 🧾 **GST-compliant** invoice formatting
+- 🗣️ **Multilingual** admin panel and storefronts
+- 📦 Warehouse & **restock API automation**
+- 📬 Real-time notifications via **email/SMS**
+
+---
 
 ## 🤝 Contributing
-- Have ideas or want to improve the platform? Contributions are welcome! Please open issues or submit PRs.
 
-# 🛡️ License
-- MIT License © 2025 Sahil Kansal
+Got ideas? Want to contribute? We'd love your input! Open an issue or submit a PR to help improve **Storix**.
+
+---
+
+## 🛡️ License
+
+MIT License © 2025 [Sahil Kansal](https://github.com/sk226)
 
 
