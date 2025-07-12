@@ -4,6 +4,9 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 
+export const runtime = "nodejs"; // ⬅️ Force Node runtime
+
+
 export async function GET(request: NextRequest, { params }:
     {
         params: Promise<
