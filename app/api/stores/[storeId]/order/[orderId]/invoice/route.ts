@@ -75,8 +75,8 @@ export async function GET(request: NextRequest, { params }:
             discount: order.discount,
 
         })
-        return new NextResponse(
-            pdfBuffer,
+        return new Response(
+            new Uint8Array(pdfBuffer),
             {
                 status: 200,
                 headers: {
