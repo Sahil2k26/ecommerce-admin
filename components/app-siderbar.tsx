@@ -112,7 +112,7 @@
 import React from "react"
 import { useParams, usePathname } from "next/navigation"
 import Link from "next/link"
-import { Store, ImageIcon, Grid3X3, Palette, Ruler, ShoppingCart, Package, Settings, ChevronRight, BrainCircuit } from "lucide-react"
+import { Store, ImageIcon, Grid3X3, Palette, Ruler, ShoppingCart, Package, Settings, ChevronRight, BrainCircuit, HomeIcon } from "lucide-react"
 
 import {
   Sidebar,
@@ -131,10 +131,10 @@ import { useAuth } from "@clerk/nextjs"
 // Navigation items for the store management
 const navigationItems = [
   {
-    title: "Demand Forecast",
-    url: "demand_forecast",
-    icon: BrainCircuit,
-    description: "Demand Forecast",
+    title: "Dashboard",
+    url: "",
+    icon: HomeIcon,
+    description: "View store analytics and performance",
   },
   {
     title: "Billboards",
@@ -173,12 +173,18 @@ const navigationItems = [
     description: "View and manage customer orders",
   },
   {
+    title: "Demand Forecast",
+    url: "demand_forecast",
+    icon: BrainCircuit,
+    description: "Demand Forecast",
+  },
+  {
     title: "Settings",
     url: "settings",
     icon: Settings,
     description: "Configure store settings",
   },
-  
+
 ]
 
 

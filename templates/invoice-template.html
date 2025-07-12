@@ -6,15 +6,45 @@
         body {
             font-family: Arial;
             padding: 20px;
+
         }
 
         h1 {
             color: #333;
+            text-align: center;
+            background-color: #b4d8e0;
+        }
+
+        h2 {
+            font-weight: 900;
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .customer-info {
+            margin-bottom: 40px;
+        }
+
+        #Customer-header {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 1.2em;
+            background-color: #b4d8e0;
         }
 
         th,
@@ -23,14 +53,28 @@
             padding: 8px;
             text-align: left;
         }
+
+        .total {
+            background-color: #b4d8e0;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
-    <h1>Invoice - {{orderId}}</h1>
-    <p>Customer: {{customerName}}</p>
-    <p>Phone: {{phone}}</p>
-    <p>Date: {{date}}</p>
+    <h1>Invoice</h1>
+    <h2>{{storeName}}</h2>
+
+    <div class="invoice-header">
+        <span>Invoice No: {{orderId}}</span>
+        <span>Date: {{date}}</span>
+    </div>
+
+    <div class="customer-info">
+        <p id="Customer-header"><strong>Customer Information</strong></p>
+        <p>Name: {{customerName}}</p>
+        <p>Phone: {{phone}}</p>
+    </div>
     <h3>Items</h3>
     <table>
         <thead>
@@ -41,16 +85,26 @@
             </tr>
         </thead>
         <tbody>
-            {{#each items}}
-            <tr>
-                <td>{{name}}</td>
-                <td>{{quantity}}</td>
-                <td>{{price}}</td>
-            </tr>
-            {{/each}}
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" style="text-align: right;"><strong>Subtotal:</strong></td>
+                <td>₹{{subtotal}}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: right;"><strong>Tax:</strong></td>
+                <td>₹{{tax}}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: right;"><strong>Discount:</strong></td>
+                <td>-₹{{discount}}</td>
+            </tr>
+            <tr class="total">
+                <td colspan="2" style="text-align: right;"><strong>Grand Total:</strong></td>
+                <td><strong>₹{{total}}</strong> </td>
+            </tr>
+        </tfoot>
     </table>
-    <p><strong>Total:</strong> ₹{{total}}</p>
 </body>
 
 </html>

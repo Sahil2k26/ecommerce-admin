@@ -5,17 +5,14 @@ import { productColumns } from "./components/columns";
 import { format } from "date-fns"
 import { formatter } from "@/lib/utils";
 
+
 export default async function productsPage({ params }: {
     params: Promise<{ storeId: string }>
 }) {
     const { storeId } = await params;
     const products = await prismadb.product.findMany({
         where: {
-            storeId: storeId,
-            quantity: {
-                gt: 0
-            },
-            isArchived: false
+            storeId: storeId
         },
         include: {
             category: true,
@@ -26,6 +23,7 @@ export default async function productsPage({ params }: {
             createdAt: "desc"
         }
     });
+
     const formattedproducts: productColumns[] = products.map((b) => (
         {
             name: b.name,
@@ -39,11 +37,15 @@ export default async function productsPage({ params }: {
             createdAt: format(b.createdAt, "MMMM do, yyyy")
         }
     ))
+
+
+
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
                 <ProductClient data={formattedproducts}></ProductClient>
             </div>
         </div>
+
     )
 }

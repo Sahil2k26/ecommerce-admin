@@ -134,7 +134,7 @@ export async function CreateProduct(storeId: string, data: ProductData) {
 
 }
 
-export async function UpdateProduct(storeId: string, productId: string, { price, name, categoryId, sizeId, colorId, isFeatured, isArchived, images }: ProductData) {
+export async function UpdateProduct(storeId: string, productId: string, { price, name, categoryId, sizeId, colorId, isFeatured, isArchived, images, quantity }: ProductData) {
     const { userId } = await auth();
     if (!userId) {
         return { error: "You must be logged in to update the product" }
@@ -188,7 +188,8 @@ export async function UpdateProduct(storeId: string, productId: string, { price,
                 price,
                 images: {
                     deleteMany: {}
-                }
+                },
+                quantity
 
             },
             where: {

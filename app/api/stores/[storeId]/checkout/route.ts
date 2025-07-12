@@ -64,8 +64,9 @@ export async function POST(
                 subTotal += product.price * item.quantity;
             }
 
-            const tax = subTotal * 0.18;
-            const total = subTotal + tax;
+            const tax = subTotal * 0.08;
+            const discount = subTotal * 0.1; // Example discount logic
+            const total = subTotal + tax - discount;
 
             const order = await tx.order.create({
                 data: {
@@ -77,6 +78,7 @@ export async function POST(
                     orderType,
                     subTotal,
                     tax,
+                    discount,
                     total,
                     orderStatus: orderType === "ONLINE" ? "PENDING" : "COMPLETED",
                     orderItems: {

@@ -62,7 +62,7 @@ export function ProductCard({ product, onAddToOrder }: ProductCardProps) {
 
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="font-bold text-lg">${product.price.toFixed(2)}</p>
+                            <p className="font-bold text-lg">₹{product.price.toFixed(2)}</p>
                             <p className="text-xs text-muted-foreground">Stock: {product.quantity}</p>
                         </div>
 

@@ -68,7 +68,12 @@ export async function GET(request: NextRequest, { params }:
                 name: item.product.name,
                 quantity: item.quantity,
                 price: item.product.price,
-            }))
+            })),
+            storeName: store.name,
+            subtotal: order.subTotal,
+            tax: order.tax,
+            discount: order.discount,
+
         })
         return new NextResponse(
             pdfBuffer,
