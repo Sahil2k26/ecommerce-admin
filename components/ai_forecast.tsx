@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Line, Bar, Pie, Radar, Bubble } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
@@ -148,7 +148,7 @@ export function AIDemandForecast() {
   const [socialMediaData, setSocialMediaData] = useState<SocialMediaData[]>([])
 
   // ======== DATA GENERATION ========
-  const generateAIForecast = async (productId: string, days: number) => {
+  const generateAIForecast = useCallback(async (productId: string, days: number) => {
     setIsLoading(true)
     await new Promise(resolve => setTimeout(resolve, 1000))
 
@@ -246,7 +246,7 @@ export function AIDemandForecast() {
     generateRiskAnalysis(product, enhancedData)
     generateProductInsights(product, enhancedData)
     setIsLoading(false)
-  }
+  }, [products])
 
   // ======== RISK ANALYSIS ========
   const generateRiskAnalysis = (product: ProductData, forecast: ForecastData[]) => {
@@ -565,7 +565,7 @@ export function AIDemandForecast() {
     if (selectedProduct && products.length > 0) {
       generateAIForecast(selectedProduct, timeHorizon)
     }
-  }, [selectedProduct, timeHorizon, products])
+  }, [selectedProduct, timeHorizon, products, generateAIForecast])
 
   // ======== COMPONENT RENDER ========
   return (
