@@ -1,6 +1,7 @@
 "use server"
 
 import prismadb from "@/lib/prismadb"
+import { NextResponse } from 'next/server';
 
 interface graphData {
     name: string
@@ -90,4 +91,197 @@ export async function getGraphRevenue(storeId: string) {
     return graphData
 
 
+}
+
+
+export async function getTopProduct() {
+  try {
+    const topProducts = await prismadb.orderItem.groupBy({
+      by: ['productId'],
+      _sum: {
+        quantity: true,
+      },
+      orderBy: {
+        _sum: {
+          quantity: 'desc',
+        },
+      },
+      take: 5,
+    });
+
+    const products = await Promise.all(
+      topProducts.map(async (item) => {
+        const product = await prismadb.product.findUnique({
+          where: { id: item.productId },
+          select: { name: true },
+        });
+
+        return {
+          name: product?.name || 'Unknown',
+          quantity: item._sum.quantity || 0,
+        };
+      })
+    );
+
+    return NextResponse.json(products);
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch top products' }, { status: 500 });
+  }
+}
+
+export async function getTotalProductOrdered() {
+  try {
+    const total = await prismadb.orderItem.aggregate({
+      _sum: {
+        quantity: true,
+      },
+    });
+
+    return NextResponse.json({
+      totalOrderedProducts: total._sum.quantity ?? 0,
+    });
+  } catch (error) {
+    console.error('[TOTAL_PRODUCTS_ERROR]', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function getTopCategories() {
+  try {
+    // Group orderItems by productId to get quantity per product
+    const grouped = await prismadb.orderItem.groupBy({
+      by: ['productId'],
+      _sum: {
+        quantity: true,
+      },
+    });
+
+    // Map: categoryId -> totalQuantity
+    const categoryTotals: Record<string, number> = {};
+
+    for (const item of grouped) {
+      const product = await prismadb.product.findUnique({
+        where: { id: item.productId },
+        select: { categoryId: true },
+      });
+
+      if (product?.categoryId) {
+        categoryTotals[product.categoryId] =
+          (categoryTotals[product.categoryId] || 0) + (item._sum.quantity || 0);
+      }
+    }
+
+    // Fetch category names and sort by quantity
+    const sorted = Object.entries(categoryTotals)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+
+    const result = await Promise.all(
+      sorted.map(async ([categoryId, quantity]) => {
+        const category = await prismadb.category.findUnique({
+          where: { id: categoryId },
+          select: { name: true },
+        });
+
+        return {
+          name: category?.name || 'Unknown',
+          quantity,
+        };
+      })
+    );
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error('[TOP_CATEGORIES_ERROR]', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function getProductRevenueData(): Promise<{ name: string; revenue: number }[]> {
+  // Step 1: Get all OrderItems with their Product's name and price
+  const orderItems = await prismadb.orderItem.findMany({
+    select: {
+      quantity: true,
+      product: {
+        select: {
+          id: true,
+          name: true,
+          price: true, // We use this from Product
+        },
+      },
+    },
+  });
+
+  // Step 2: Aggregate revenue per product
+  const productRevenueMap = new Map<string, { name: string; revenue: number }>();
+
+  for (const item of orderItems) {
+    const product = item.product;
+    if (!product) continue;
+
+    const revenue = product.price * item.quantity;
+
+    if (productRevenueMap.has(product.id)) {
+      productRevenueMap.get(product.id)!.revenue += revenue;
+    } else {
+      productRevenueMap.set(product.id, {
+        name: product.name,
+        revenue,
+      });
+    }
+  }
+
+  // Step 3: Convert to array
+  const allProducts = Array.from(productRevenueMap.values());
+
+  return allProducts
+    .sort((a, b) => b.revenue - a.revenue)
+    .slice(0, 5);
+}
+
+export async function getCategoryRevenueData(): Promise<{ name: string; revenue: number }[]> {
+  // Step 1: Get all order items with product's price + category
+  const orderItems = await prismadb.orderItem.findMany({
+    select: {
+      quantity: true,
+      product: {
+        select: {
+          id: true,
+          price: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // Step 2: Aggregate revenue per category
+  const categoryMap = new Map<string, { name: string; revenue: number }>();
+
+  for (const item of orderItems) {
+    const category = item.product.category;
+    const price = item.product.price;
+
+    if (!category) continue;
+
+    const revenue = price * item.quantity;
+
+    if (categoryMap.has(category.id)) {
+      categoryMap.get(category.id)!.revenue += revenue;
+    } else {
+      categoryMap.set(category.id, {
+        name: category.name,
+        revenue,
+      });
+    }
+  }
+  const allCategories = Array.from(categoryMap.values());
+
+  return allCategories
+    .sort((a, b) => b.revenue - a.revenue)
+    .slice(0, 5);
 }
